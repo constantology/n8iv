@@ -1,11 +1,12 @@
 .DS_Store
 .git*
-.idea/
+.idea
 
-node_modules/
+node_modules
 npm-debug.log
 
-test/
-src/
+docs/Function.bak.md
+test
+src
 build*
 *.min.js
