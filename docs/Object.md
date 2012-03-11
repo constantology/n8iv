@@ -173,27 +173,6 @@ Returns the `length` property of the Array returned when executing `Object.ownKe
 
 ```
 
-### value( object:Object, path:String ):Mixed
-Returns the property value at the specified path in an Object.
-
-#### Example:
-
-```javascript
-
-   var data = { one : { two : { three : true, four : [1, 2, 3, 4] } } };
-
-   Object.prop( data, 'one' );            // returns => { two : { three : true, four : [1, 2, 3, 4] } }
-
-   Object.prop( data, 'one.two' );        // returns => { three : true, four : [1, 2, 3, 4] }
-
-   Object.prop( data, 'one.two.three' );  // returns => { three : true }
-
-   Object.prop( data, 'one.two.four' );   // returns => [1, 2, 3, 4]
-
-   Object.prop( data, 'one.two.four.2' ); // returns => 3
-
-```
-
 ### reduce( object:Object, iterator:Function, value:Mixed ):Mixed
 This is similar to [Array.reduce](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/reduce) except that it is used on Objects instead of Arrays.
 
@@ -238,6 +217,27 @@ Removes each `key` from the passed `object` and returns `object`.
 
 ```
 
+### value( object:Object, path:String ):Mixed
+Returns the property value at the specified path in an Object.
+
+#### Example:
+
+```javascript
+
+   var data = { one : { two : { three : true, four : [1, 2, 3, 4] } } };
+
+   Object.value( data, 'one' );            // returns => { two : { three : true, four : [1, 2, 3, 4] } }
+
+   Object.value( data, 'one.two' );        // returns => { three : true, four : [1, 2, 3, 4] }
+
+   Object.value( data, 'one.two.three' );  // returns => { three : true }
+
+   Object.value( data, 'one.two.four' );   // returns => [1, 2, 3, 4]
+
+   Object.value( data, 'one.two.four.2' ); // returns => 3
+
+```
+
 ### values( object:Object ):Array
 Returns the `values` of the passed Object.
 
@@ -265,37 +265,37 @@ Returns a normalised type based on the result of executing `Object.prototype.toS
 
 **Note:** All types are **always** in lowercase.
 
-Examples:
+#### Examples:
 
 ```javascript
 
-   Object.type( null );                                   // throws => TypeError
+   ( null ).__type__;                               // throws => TypeError
 
-   Object.type( undefined );                              // throws => TypeError
+   ( undefined ).__type__;                          // throws => TypeError
 
-   Object.type( [] );                                     // returns => "array"
+   [].__type__;                                     // returns => "array"
 
-   Object.type( true );                                   // returns => "boolean"
+   ( true ).__type__;                               // returns => "boolean"
 
-   Object.type( new Date() );                             // returns => "date"
+   ( new Date() ).__type__;                         // returns => "date"
 
-   Object.type( function() {} );                          // returns => "function"
+   ( function() {} ).__type__;                      // returns => "function"
 
-   Object.type( 0 );                                      // returns => "number"
+   ( 0 ).__type__;                                  // returns => "number"
 
-   Object.type( {} );                                     // returns => "object"
+   ( {} ).__type__;                                 // returns => "object"
 
-   Object.type( Object.create( null ) );                  // returns => "nullobject"
+   Object.create( null ).__type__;                  // returns => undefined
 
-   Object.type( /.*/ );                                   // returns => "regexp"
+   ( /.*/ ).__type__;                               // returns => "regexp"
 
-   Object.type( '' );                                     // returns => "string"
+   ( '' ).__type__;                                 // returns => "string"
 
-   Object.type( document.createElement( 'div' ) );        // returns => "htmlelement"
+   document.createElement( 'div' ).__type__;        // returns => "htmlelement"
 
-   Object.type( document.querySelectorAll( 'div' ) );     // returns => "htmlcollection"
+   document.querySelectorAll( 'div' ).__type__;     // returns => "htmlcollection"
 
-   Object.type( document.getElementsByTagName( 'div' ) ); // returns => "htmlcollection"
+   document.getElementsByTagName( 'div' ).__type__; // returns => "htmlcollection"
 
 ```
 
