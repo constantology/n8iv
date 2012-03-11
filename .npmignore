@@ -8,4 +8,4 @@ npm-debug.log
 test/
 src/
 build*
-n8iv.min.js
+*.min.js
