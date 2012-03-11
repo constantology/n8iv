@@ -1,0 +1,10 @@
+{
+	"encoding"  : "UTF-8",
+	"ext"       : "js",
+	"file_err"  : "continue",
+	"out"       : { "dir" : "./", "file" : "n8iv", "min" : "n8iv.min" },
+	"src" : {
+		"dir"   : "./",
+		"files" : ["n8iv._", "n8iv.Fn", "n8iv.Oo"]
+	}
+}

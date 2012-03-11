@@ -1,0 +1,25 @@
+{
+	"author"          : {
+		"name"        : "constantology",
+		"email"       : "constantology@gmail.com",
+		"url"         : "http://muigui.com"
+	},
+	"description"     : "n8iv is an object-oriented & functional programming library – for modern javascript engines – which correctly extends JavaScript Natives, as well as providing other useful Classes. Giving you a – relatively – safe and easy to use API, to help make your code more succinct and efficient.",
+    "devDependencies" : {
+	    "Templ8"      : ">= 0.3.0",
+        "mkdirp"      : ">= 0.3.0",
+	    "uglify-js"   : ">= 1.2.5"
+    },
+	"keywords"        : ["api", "framework", "functional", "javascript", "library", "object-oriented", "programming"],
+	"licenses"        : [ {
+		"type"        : "MIT",
+		"url"         : "https://raw.github.com/constantology/n8iv/master/LICENSE"
+	} ],
+	"main"            : "./n8iv.js",
+	"name"            : "n8iv",
+	"repository"      : {
+		"type"        : "git",
+		"url"         : "git@github.com:constantology/n8iv.git"
+	},
+	"version"         : "0.0.1"
+}

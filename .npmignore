@@ -1,0 +1,11 @@
+.DS_Store
+.git*
+.idea/
+
+node_modules/
+npm-debug.log
+
+test/
+src/
+build*
+n8iv.min.js

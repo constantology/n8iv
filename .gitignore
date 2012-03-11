@@ -1,0 +1,10 @@
+.DS_Store
+.idea/
+
+node_modules/
+npm-debug.log
+
+test/
+
+docs/Function.memoize.md
+docs/README.md
