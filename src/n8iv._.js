@@ -40,10 +40,9 @@
 	function def( item, name, desc, overwrite, debug ) {
 		var exists = got( item, name );
 		!( desc.get || desc.set ) || delete desc.writable; // <- ARGH!!! see: https://plus.google.com/117400647045355298632/posts/YTX1wMry8M2
-		if ( overwrite === T || !exists ) return Object.defineProperty( item, name, desc );
-		else if ( debug === T && exists ) {
-			trace(); error( new Error( 'Trying to overwrite existing property: ' + name + ', in: ' + ( isFn( item ) ? item.n8ivName : item[CTOR].n8ivName ) + '.' ), T );
-		}
+		if ( overwrite === T || !exists ) Object.defineProperty( item, name, desc );
+		else if ( debug === T && exists )
+			trace().error( new Error( 'Trying to overwrite existing property: ' + name + ', in: ' + ( isFn( item ) ? item.n8ivName : item[CTOR].n8ivName ) + '.' ), T );
 		return n8iv;
 	}
 
