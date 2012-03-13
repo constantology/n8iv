@@ -128,7 +128,7 @@
 		}.mimic( m, name );
 	}
 
-	var ERR_MSG = '{0} already exists. Cannot override existing {1}', PARENT = 'parent', SUPER = '__super',
+	var ERR_MSG = ' already exists. Cannot override existing ', PARENT = 'parent', SUPER = '__super',
 		defaults  = ( CTOR + ' extend mixin module singleton type' ).split( ' ' ),
 		desc_noop = n8iv.describe( n8iv.noop, cw ),
 		dumb      = n8iv.obj(), re_dot   = /\./g,
@@ -136,14 +136,14 @@
 
 	reserved[CTOR] = reserved[PARENT] = reserved[SUPER] = reserved[TYPE] = T;
 
-	n8iv.def( Class, 'is',     n8iv.describe( is,    r ) );
-	n8iv.def( Class, 'type',   n8iv.describe( type,  r ) );
-	n8iv.def( n8iv,  'Class',  n8iv.describe( Class, r ) );
-	n8iv.def( n8iv,  'create', n8iv.describe( function( n ) {
-		var C = reg_type[n] || reg_type['n8iv_' + n] || reg_path[n], args = Array.from( arguments, 1 );
+	n8iv.def( Class, 'is',     n8iv.describe( is,    r ) )
+		.def( Class, 'type',   n8iv.describe( type,  r ) )
+		.def( n8iv,  'Class',  n8iv.describe( Class, r ) )
+		.def( n8iv,  'create', n8iv.describe( function( n ) {
+			var C = reg_type[n] || reg_type['n8iv_' + n] || reg_path[n], args = Array.from( arguments, 1 );
 
-		C || ( n8iv.trace().error( new Error( n + ' does not match any registered n8iv.Classes.' ), T ) );
+			C || ( n8iv.trace().error( new Error( n + ' does not match any registered n8iv.Classes.' ), T ) );
 
-		return C.create.apply( root, args );
-	}, r ) );
+			return C.create.apply( root, args );
+		}, r ) );
 }();

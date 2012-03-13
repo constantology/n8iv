@@ -226,8 +226,7 @@
                     keys = AP.pluck.call(a, f, T);
                     break;
                   default:
-                    trace();
-                    error(new TypeError("Array.prototype.groupBy can only match based on a Function, RegExp or String."), T);
+                    n8iv.trace().error(new TypeError("Array.prototype.groupBy can only match based on a Function, RegExp or String."), T);
                 }
                 (keys || [ 0, 1 ]).forEach(function(k) {
                     res[k] = [];
@@ -460,4 +459,5 @@
             }
         };
     }(), r);
-}(this, this.n8iv);
+    n8iv.ENV != "commonjs" || (module.exports = n8iv);
+}(this, typeof n8iv == "undefined" ? this.document ? this.n8iv : require("./n8iv._") : n8iv);

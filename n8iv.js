@@ -1,4 +1,4 @@
-!function(root, n8iv) {
+!function(root) {
     function $A(a, i, j) {
         return got(a, LEN) ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a[LEN]) : [ a ];
     }
@@ -12,7 +12,7 @@
           default:
             return ctx || ENV != CJS ? root : module.exports;
         }
-        ctx || (ctx = root);
+        ctx || (ctx = ENV != CJS ? root : module.exports);
         ns[0] != "n8iv" || (ctx = n8iv, ns.shift());
         ns.forEach(function(o) {
             if (!o) return;
@@ -40,8 +40,9 @@
     function coerce(o, n, s) {
         return !isNaN(n = Number(o)) ? n : (s = String(o)) in coercions ? coercions[s] : o;
     }
-    function copy(d, s) {
-        for (var k in s) !has(s, k) || (d[k] = s[k]);
+    function copy(d, s, n) {
+        n = n === T;
+        for (var k in s) !has(s, k) || n && has(d, k) || (d[k] = s[k]);
         return d;
     }
     function def(item, name, desc, overwrite, debug) {
@@ -296,17 +297,16 @@
             return lc(this);
         }
     }, r);
-    def(root, "n8iv", describe({
-        value : n8iv
-    }, r));
     typeof global == UNDEF || (root = global);
     try {
-        ENV != CJS || (module.exports = n8iv);
+        ENV != CJS ? def(root, "n8iv", describe({
+            value : n8iv
+        }, r)) : module.exports = n8iv;
     } catch (e) {}
     defs(n8iv, {
         ENV : ENV,
         modes : modes,
-        root : {
+        global : {
             value : root
         },
         bless : bless,
@@ -340,7 +340,7 @@
         type : n8iv_type,
         valof : valof
     }, r);
-}(this, this.n8iv);
+}(this);
 
 !function(root, n8iv) {
     var LEN = "length", PROTO = "prototype", F = !1, N = null, T = !0, r = "r";
@@ -570,8 +570,7 @@
                     keys = AP.pluck.call(a, f, T);
                     break;
                   default:
-                    trace();
-                    error(new TypeError("Array.prototype.groupBy can only match based on a Function, RegExp or String."), T);
+                    n8iv.trace().error(new TypeError("Array.prototype.groupBy can only match based on a Function, RegExp or String."), T);
                 }
                 (keys || [ 0, 1 ]).forEach(function(k) {
                     res[k] = [];
@@ -804,7 +803,8 @@
             }
         };
     }(), r);
-}(this, this.n8iv);
+    n8iv.ENV != "commonjs" || (module.exports = n8iv);
+}(this, typeof n8iv == "undefined" ? this.document ? this.n8iv : require("./n8iv._") : n8iv);
 
 !function(root, n8iv) {
     var F = !1, N = null, T = !0, U, cw = "cw", r = "r", ARR = "array", CTOR = "constructor", FN = "function", LEN = "length", OBJ = "object", NOBJ = N + OBJ, PROTO = "prototype", TYPE = "__type__";
@@ -925,12 +925,9 @@
                 return this.chain !== F && o === U ? this : o;
             }.mimic(m, name);
         }
-        var ERR_MSG = "{0} already exists. Cannot override existing {1}", PARENT = "parent", SUPER = "__super", defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
+        var ERR_MSG = " already exists. Cannot override existing ", PARENT = "parent", SUPER = "__super", defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
         reserved[CTOR] = reserved[PARENT] = reserved[SUPER] = reserved[TYPE] = T;
-        n8iv.def(Class, "is", n8iv.describe(is, r));
-        n8iv.def(Class, "type", n8iv.describe(type, r));
-        n8iv.def(n8iv, "Class", n8iv.describe(Class, r));
-        n8iv.def(n8iv, "create", n8iv.describe(function(n) {
+        n8iv.def(Class, "is", n8iv.describe(is, r)).def(Class, "type", n8iv.describe(type, r)).def(n8iv, "Class", n8iv.describe(Class, r)).def(n8iv, "create", n8iv.describe(function(n) {
             var C = reg_type[n] || reg_type["n8iv_" + n] || reg_path[n], args = Array.from(arguments, 1);
             C || n8iv.trace().error(new Error(n + " does not match any registered n8iv.Classes."), T);
             return C.create.apply(root, args);
@@ -1120,9 +1117,7 @@
         function broadcast(cb) {
             var args = this.args.concat(cb[_options].args), ctx = cb[_ctx] || this[_ctx], fire = cb.fire || cb[_fn];
             if (!n8iv.isFn(fire)) return T;
-            if (!!Object.key(this[_ctx], cb[_fn])) {
-                args[0] !== this[_ctx] || args.shift();
-            } else if (args[0] !== this[_ctx]) args.unshift(this[_ctx]);
+            if (!!Object.key(this[_ctx], cb[_fn])) args[0] !== this[_ctx] || args.shift(); else if (args[0] !== this[_ctx]) args.unshift(this[_ctx]);
             return fire.apply(ctx, args) !== F;
         }
         function createRelayCallback(ctxr, ctx, evt) {
@@ -1309,4 +1304,5 @@
             _destroy : n8iv.noop
         };
     }());
-}(this, this.n8iv);
+    n8iv.ENV != "commonjs" || (module.exports = n8iv);
+}(this, typeof n8iv == "undefined" ? this.document ? this.n8iv : require("./n8iv._") : n8iv);

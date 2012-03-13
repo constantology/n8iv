@@ -5,6 +5,6 @@
 	"out"       : { "dir" : "./", "file" : "n8iv._", "min" : "n8iv._.min" },
 	"src" : {
 		"dir"   : "./src",
-		"files" : [".begin", "n8iv._", ".end"]
+		"files" : ["n8iv._"]
 	}
 }

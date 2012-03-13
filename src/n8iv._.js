@@ -1,3 +1,4 @@
+!function( root ) {
 // utils
 	function $A( a, i, j ) { return got( a, LEN ) ? slice.call( a, ( isNum( i ) ? i > 0 ? i : 0 : 0 ), ( isNum( j ) ? j > i ? j : i + 1 : a[LEN] ) ) : [a]; }
 
@@ -8,7 +9,7 @@
 			default  : return ctx || ENV != CJS ? root : module.exports;
 		}
 
-		ctx || ( ctx = root );
+		ctx || ( ctx = ENV != CJS ? root : module.exports );
 		ns[0] != 'n8iv' || ( ctx = n8iv, ns.shift() );
 
 		ns.forEach( function( o ) {
@@ -30,8 +31,9 @@
 
 	function coerce( o, n, s ) { return !isNaN( ( n = Number( o ) ) ) ? n : ( s = String( o ) ) in coercions ? coercions[s] : o; }
 
-	function copy( d, s ) {
-		for ( var k in s ) !has( s, k ) || ( d[k] = s[k] );
+	function copy( d, s, n ) {
+		n = n === T;
+		for ( var k in s ) !has( s, k ) || n && has( d, k ) || ( d[k] = s[k] );
 		return d;
  	}
 
@@ -241,17 +243,15 @@
 		lc       : function() { return lc( this ); }
 	}, r );
 
-	def( root, 'n8iv', describe( { value : n8iv }, r ) );
-
 // if env === nodejs we want root to be global and we want to do it down here so we don't break anything up there
 	typeof global == UNDEF || ( root = global );
 	try { // expose n8iv: JavaScript Natives are exposed by default, as such we do not need to worry about adding them to module.exports
-		ENV != CJS || ( module.exports = n8iv );
+		ENV != CJS ? def( root, 'n8iv', describe( { value : n8iv }, r ) ) : ( module.exports = n8iv );
 	} catch( e ) {}
 
 	defs( n8iv, {
 	// properties
-		ENV     : ENV,     modes      : modes,      root        : { value : root },
+		ENV        : ENV,        modes    : modes,    global      : { value : root },
 	// methods
 		bless      : bless,      bool     : bool,     coerce      : coerce,      copy   : copy,       def     : def,
 		defs       : defs,       describe : describe, description : description, error  : error,      exists  : exists,
@@ -260,3 +260,5 @@
 		nativeType : nativeType, noop     : noop,     obj         : n8iv_obj,    proto  : n8iv_proto, range   : range,
 		requite    : requite,    tostr    : tostr,    trace       : trace,       type   : n8iv_type,  valof   : valof
 	}, r );
+
+}( this );

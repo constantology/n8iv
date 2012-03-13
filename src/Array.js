@@ -59,7 +59,7 @@ n8iv.defs( Array[PROTO], function() {
 				case 'number'   :
 				case 'string'   : match = groupByStr;
 								  keys = AP.pluck.call( a, f, T ); break;
-				default         : trace(); error( new TypeError( 'Array.prototype.groupBy can only match based on a Function, RegExp or String.' ), T );
+				default         : n8iv.trace().error( new TypeError( 'Array.prototype.groupBy can only match based on a Function, RegExp or String.' ), T );
 			}
 			
 			( keys || [0, 1] ).forEach( function( k ) { res[k] = []; } );

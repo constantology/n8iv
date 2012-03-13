@@ -34,10 +34,8 @@ n8iv.Class( 'n8iv.Observer', function() {
 
 		if ( !n8iv.isFn( fire ) ) return T;
 
-// todo: this will need extensive testing to make sure it works for all use cases
-		if ( !!Object.key( this[_ctx], cb[_fn] ) ) {                   // if the original callback function is a method on this Observer
+		if ( !!Object.key( this[_ctx], cb[_fn] ) )                     // if the original callback function is a method on this Observer
 			args[0] !== this[_ctx] || args.shift();                    // then if the first argument is the Observer Object.remove it, as it's an internal event listener
-		}
 		else if ( args[0] !== this[_ctx] ) args.unshift( this[_ctx] ); // otherwise, if the Observer is not the first argument, then add it, so the callback knows what Observer fired it
 
 		return ( fire.apply( ctx, args ) !== F );                      // if a callback explicitly returns false, then we want to stop broadcasting
@@ -66,8 +64,7 @@ n8iv.Class( 'n8iv.Observer', function() {
 
 	function handleEvent( cb ) { return function handleEvent() { return cb.handleEvent.apply( cb, arguments ); }.mimic( cb.fire ); }
 
-	function matchCallback( o ) {
-	return ( this.isCB === T ? o[_fn].valueOf() === this[_ctx].fire : o[_fn] === this[_fn] ) && o[_ctx] === this[_ctx] && o.event === this.event; }
+	function matchCallback( o ) { return ( this.isCB === T ? o[_fn].valueOf() === this[_ctx].fire : o[_fn] === this[_fn] ) && o[_ctx] === this[_ctx] && o.event === this.event; }
 
 	function relay() { return this.broadcast.apply( this, arguments ); }
 
@@ -147,7 +144,6 @@ n8iv.Class( 'n8iv.Observer', function() {
 			Array.isArray( o.args ) || ( o.args = [] );
 
 			cb      = { ctx : ctx || this, event : event, fn : fn, id : ++listener_id, options : o };
-// todo: this will need good test(icles)
 			cb.fire = ( o.single ? createSingleCallback.call( this, event, cb ) : cb[_fn] ).callback( {
 				args : o.args, buffer : o.buffer, ctx : cb[_ctx], delay : o.delay
 			} );
