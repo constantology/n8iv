@@ -292,6 +292,9 @@
         },
         lc : function() {
             return lc(this);
+        },
+        startsWith : function(s) {
+            return !this.indexOf(s);
         }
     }, r);
     typeof global == UNDEF || (root = global);

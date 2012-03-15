@@ -6,12 +6,13 @@
                 desc = path;
                 path = "";
             }
-            var C, name, ns, _ctor = desc[CTOR], _proto = n8iv.obj(), _super = desc.extend || Object, mod = desc.module, mixin = desc.mixin || dumb, singleton = desc.singleton, type = (desc.type || path).replace(re_dot, "_").lc();
+            var C, name, ns, _ctor = desc[CTOR], _proto = n8iv.obj(), _super = desc.extend || Object, mod = getModule(desc.module), mixin = desc.mixin || dumb, singleton = desc.singleton, type = getType(desc.type || path);
             !n8iv.isStr(_super) || (_super = reg_path[_super] || reg_type[_super]);
             if (path) {
                 ns = path.split(".");
                 name = ns.pop();
-                ns = n8iv.bless(ns, !mod ? N : mod.exports || (mod.exports = n8iv.obj()));
+                !ns[LEN] || !ns[0].startsWith("^") || (mod ? ns.shift() : ns[0] = ns[0].substring(1));
+                ns = n8iv.bless(ns, mod);
             }
             n8iv.def(_proto, PARENT, n8iv.describe(n8iv.noop, cw), T);
             n8iv.def(_proto, CTOR, n8iv.describe(ctor(_ctor, _super[PROTO][CTOR], name, _proto), r), T);
@@ -21,6 +22,7 @@
             Object.remove(desc, defaults);
             C[PROTO] = apply(_proto, n8iv.copy(desc, mixin));
             n8iv.def(C, "create", n8iv.describe(create(extend(C, _super)), r), T);
+            path = path.replace(re_root, "");
             if (singleton) {
                 n8iv.def(C, "singleton", n8iv.describe({
                     value : singleton === T ? new C : C.create.apply(C, [].concat(singleton))
@@ -80,6 +82,12 @@
             }
             return C;
         }
+        function getModule(mod) {
+            return !mod ? N : Module && mod instanceof Module ? mod.exports || (mod.exports = n8iv.obj()) : mod;
+        }
+        function getType(type) {
+            return type.replace(re_root, "").replace(re_dot, "_").lc();
+        }
         function is(o, C) {
             if (o instanceof C) return T;
             if (!(o = o[CTOR])) return F;
@@ -117,7 +125,7 @@
                 return this.chain !== F && o === U ? this : o;
             }.mimic(m, name);
         }
-        var ERR_MSG = " already exists. Cannot override existing ", PARENT = "parent", SUPER = "__super", defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
+        var ERR_MSG = " already exists. Cannot override existing ", PARENT = "parent", SUPER = "__super", Module = n8iv.ENV != "commonjs" ? N : require("module"), defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, re_root = /^\u005E/, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
         reserved[CTOR] = reserved[PARENT] = reserved[SUPER] = reserved[TYPE] = T;
         n8iv.def(Class, "is", n8iv.describe(is, r)).def(Class, "type", n8iv.describe(type, r)).def(n8iv, "Class", n8iv.describe(Class, r)).def(n8iv, "create", n8iv.describe(function(n) {
             var C = reg_type[n] || reg_type["n8iv_" + n] || reg_path[n], args = Array.from(arguments, 1);
@@ -270,12 +278,12 @@
         };
     }());
     n8iv.Class("n8iv.Observer", function() {
-        function addObservers(events) {
-            events = Object.clone(events);
-            var ctx = events[_ctx], k, l, o, opt = events[_options], s;
-            Object.remove(events, _ctx, _options);
-            for (k in events) {
-                l = events[k];
+        function addObservers(observers) {
+            observers = Object.clone(observers);
+            var ctx = observers[_ctx], k, l, o, opt = observers[_options], s;
+            Object.remove(observers, _ctx, _options);
+            for (k in observers) {
+                l = observers[k];
                 o = !n8iv.isUndef(l[_options]) ? l[_options] : opt;
                 s = !n8iv.isUndef(l[_ctx]) ? l[_ctx] : ctx;
                 switch (n8iv.type(l)) {
@@ -336,24 +344,112 @@
                 return cb.handleEvent.apply(cb, arguments);
             }.mimic(cb.fire);
         }
+        function ignore(event, fn, ctx) {
+            event = event.lc();
+            var e = this[_observers].get(event), i, o;
+            if (!e) {
+                return;
+            }
+            switch (n8iv.type(fn)) {
+              case "n8iv_callback":
+                o = {
+                    ctx : fn,
+                    isCB : T
+                };
+                break;
+              default:
+                o = {
+                    ctx : ctx || this,
+                    fn : fn
+                };
+            }
+            o.event = event;
+            o = e.find(matchCallback, o);
+            if (o !== N) {
+                i = e.indexOf(o);
+                i < 0 || e.splice(i, 1);
+            }
+        }
         function matchCallback(o) {
             return (this.isCB === T ? o[_fn].valueOf() === this[_ctx].fire : o[_fn] === this[_fn]) && o[_ctx] === this[_ctx] && o.event === this.event;
+        }
+        function observe(event, fn, ctx, o) {
+            var cb, e = this[_observers], fnt, q;
+            if (n8iv.isObj(event)) return addObservers.call(this, event);
+            switch (fnt = n8iv.nativeType(fn)) {
+              case ARR:
+                cb = n8iv.obj();
+                cb[event] = {
+                    fn : fn,
+                    options : o,
+                    ctx : ctx
+                };
+                return addObservers.call(this, cb);
+              case OBJ:
+              case NOBJ:
+              case "n8iv_callback":
+                if ("handleEvent" in fn) {
+                    !(n8iv.isObj(ctx) && n8iv.isUndef(o)) || (o = ctx);
+                    ctx = fn;
+                    fn = handleEvent(fn);
+                }
+                break;
+              case "string":
+                !ctx || (fn = ctx[fn]);
+                break;
+            }
+            event = event.lc();
+            (q = e.get(event)) || e.set(event, q = []);
+            switch (n8iv.type(o)) {
+              case "boolean":
+                o = {
+                    single : !!o
+                };
+                break;
+              case "number":
+                o = {
+                    delay : o
+                };
+                break;
+              case OBJ:
+              case NOBJ:
+                o = Object.clone(o);
+                break;
+              default:
+                o = n8iv.obj();
+            }
+            Array.isArray(o.args) || (o.args = []);
+            cb = {
+                ctx : ctx || this,
+                event : event,
+                fn : fn,
+                id : ++listener_id,
+                options : o
+            };
+            cb.fire = (o.single ? createSingleCallback.call(this, event, cb) : cb[_fn]).callback({
+                args : o.args,
+                buffer : o.buffer,
+                ctx : cb[_ctx],
+                delay : o.delay
+            });
+            q.push(cb);
         }
         function relay() {
             return this.broadcast.apply(this, arguments);
         }
-        var _broadcasting = "broadcasting", _ctx = "ctx", _destroyed = "destroyed", _events = "events", _fn = "fn", _options = "options", _suspended = "events_suspended", listener_id = 0;
+        var _broadcasting = "broadcasting", _ctx = "ctx", _destroyed = "destroyed", _fn = "fn", _observers = "listeners", _options = "options", _suspended = "observer_suspended", listener_id = 0;
         return {
-            constructor : function Observer(events) {
+            constructor : function Observer(observers) {
                 this[_broadcasting] = F;
                 this[_destroyed] = F;
                 this[_suspended] = F;
-                this[_events] = n8iv.Hash.create();
-                !n8iv.isObj(events) || this.on(events);
+                this[_observers] = n8iv.Hash.create();
+                !n8iv.isObj(observers) || this.on(observers);
+                !n8iv.isObj(this.observers) || this.on(this.observers), delete this.observers;
             },
             broadcast : function(event) {
-                if (this[_destroyed] || this[_suspended] || !this[_events][LEN] || !event || !this[_events].has(event = event.lc())) return;
-                var args = Array.from(arguments, 1), e = this[_events].get(event).clone();
+                if (this[_destroyed] || this[_suspended] || !this[_observers][LEN] || !event || !this[_observers].has(event = event.lc())) return;
+                var args = Array.from(arguments, 1), e = this[_observers].get(event).clone();
                 if (!e[LEN]) return;
                 this[_broadcasting] = event;
                 e.every(broadcast, {
@@ -379,77 +475,19 @@
                 this._destroy();
                 this.broadcast("destroy");
                 this[_suspended] = T;
-                delete this[_events];
+                delete this[_observers];
                 return T;
             },
-            on : function(event, fn, ctx, o) {
-                var cb, e = this[_events], fnt, q;
-                if (n8iv.isObj(event)) return addObservers.call(this, event);
-                switch (fnt = n8iv.nativeType(fn)) {
-                  case ARR:
-                    cb = n8iv.obj();
-                    cb[event] = {
-                        fn : fn,
-                        options : o,
-                        ctx : ctx
-                    };
-                    return addObservers.call(this, cb);
-                  case OBJ:
-                  case NOBJ:
-                  case "n8iv_callback":
-                    if ("handleEvent" in fn) {
-                        !(n8iv.isObj(ctx) && n8iv.isUndef(o)) || (o = ctx);
-                        ctx = fn;
-                        fn = handleEvent(fn);
-                    }
-                    break;
-                  case "string":
-                    !ctx || (fn = ctx[fn]);
-                    break;
-                }
-                event = event.lc();
-                (q = e.get(event)) || e.set(event, q = []);
-                switch (n8iv.type(o)) {
-                  case "boolean":
-                    o = {
-                        single : !!o
-                    };
-                    break;
-                  case "number":
-                    o = {
-                        delay : o
-                    };
-                    break;
-                  case OBJ:
-                  case NOBJ:
-                    o = Object.clone(o);
-                    break;
-                  default:
-                    o = n8iv.obj();
-                }
-                Array.isArray(o.args) || (o.args = []);
-                cb = {
-                    ctx : ctx || this,
-                    event : event,
-                    fn : fn,
-                    id : ++listener_id,
-                    options : o
-                };
-                cb.fire = (o.single ? createSingleCallback.call(this, event, cb) : cb[_fn]).callback({
-                    args : o.args,
-                    buffer : o.buffer,
-                    ctx : cb[_ctx],
-                    delay : o.delay
-                });
-                q.push(cb);
-            },
+            ignore : ignore,
+            observe : observe,
+            on : observe,
             once : function(evt, fn, ctx, o) {
                 n8iv.isObj(o) || (o = n8iv.obj());
                 o.single = T;
                 this.on(evt, fn, ctx, o);
             },
             purgeObservers : function(event) {
-                var e = this[_events];
+                var e = this[_observers];
                 if (!event) {
                     e.clear();
                     return;
@@ -467,32 +505,7 @@
             suspendEvents : function() {
                 this[_suspended] || (this[_suspended] = T, this.broadcast("observer:suspended"));
             },
-            un : function(event, fn, ctx) {
-                event = event.lc();
-                var e = this[_events].get(event), i, o;
-                if (!e) {
-                    return;
-                }
-                switch (n8iv.type(fn)) {
-                  case "n8iv_callback":
-                    o = {
-                        ctx : fn,
-                        isCB : T
-                    };
-                    break;
-                  default:
-                    o = {
-                        ctx : ctx || this,
-                        fn : fn
-                    };
-                }
-                o.event = event;
-                o = e.find(matchCallback, o);
-                if (o !== N) {
-                    i = e.indexOf(o);
-                    i < 0 || e.splice(i, 1);
-                }
-            },
+            un : ignore,
             _destroy : n8iv.noop
         };
     }());

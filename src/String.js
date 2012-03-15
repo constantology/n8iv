@@ -55,7 +55,6 @@ n8iv.defs( String[PROTO], function() {
 			if ( isNaN( n ) || this[LEN] < n || n == 0 ) return [String( this )];
 			return this.match( cache_slices[n] || ( cache_slices[n] = new RegExp( '(.{1,' + n + '})', 'g' ) ) );
 		},
-		startsWith   : function( s ) { return !this.indexOf( s ); },
 		times        : function( n ) { return new Array( Number.toInteger( n ) + 1 ).join( this ); },
 		toCamelCase  : function() {
 			var parts = splitString( this ), str = [parts.shift()];

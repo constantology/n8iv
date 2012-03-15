@@ -8,17 +8,22 @@
 			_ctor     = desc[CTOR],
 			_proto    = n8iv.obj(),
 			_super    = desc.extend || Object,
-			mod       = desc.module,
+			mod       = getModule( desc.module ),
 			mixin     = desc.mixin  || dumb,
 			singleton = desc.singleton,
-			type      = ( desc.type || path ).replace( re_dot, '_' ).lc();
+			type      = getType( desc.type || path );
 
 		!n8iv.isStr( _super ) || ( _super = reg_path[_super] || reg_type[_super] );
 
 		if ( path ) {
 			ns   = path.split( '.' );
 			name = ns.pop();
-			ns   = n8iv.bless( ns, !mod ? N : mod.exports || ( mod.exports = n8iv.obj() ) );
+//			if ( ns[LEN] && ns[0].startsWith( '^' ) ) {
+//				if ( mod ) ns.shift();
+//				else ns[0] = ns[0].substring( 1 );
+//			}
+			!ns[LEN] || !ns[0].startsWith( '^' ) || ( mod ? ns.shift() : ns[0] = ns[0].substring( 1 ) );
+			ns   = n8iv.bless( ns, mod );
 		}
 
 		n8iv.def( _proto, PARENT, n8iv.describe( n8iv.noop, cw ), T );
@@ -33,7 +38,9 @@
 		Object.remove( desc, defaults );
 
 		C[PROTO] = apply( _proto, n8iv.copy( desc, mixin ) );
-		n8iv.def( C, 'create', n8iv.describe( create( extend( C, _super ) ), r ), T );
+		n8iv.def( C, 'create',    n8iv.describe( create( extend( C, _super ) ), r ), T );
+
+		path = path.replace( re_root, '' );
 
 		if ( singleton ) {
 			n8iv.def( C, 'singleton', n8iv.describe( { value : ( singleton === T ? new C : C.create.apply( C, [].concat( singleton ) ) ) }, r ) );
@@ -53,7 +60,6 @@
 				case OBJ : n8iv.def( proto, k, v, T ); break;
 				default  : proto[k] = v;
 			}
-//			n8iv.def( proto, k, ( n8iv.isObj( v ) ? v : n8iv.describe( { value : v }, cw ) ), T );
 		} );
 		return proto;
 	}
@@ -90,6 +96,16 @@
 		}
 		return C;
 	}
+
+	function getModule( mod ) {
+		return !mod
+			 ?  N
+			 :  Module && ( mod instanceof Module )
+			 ?  mod.exports || ( mod.exports = n8iv.obj() )
+			 :  mod;
+	}
+
+	function getType( type ) { return type.replace( re_root, '' ).replace( re_dot, '_' ).lc(); }
 
 	function is( o, C ) {
 		if ( o instanceof C ) return T;
@@ -128,10 +144,11 @@
 		}.mimic( m, name );
 	}
 
-	var ERR_MSG = ' already exists. Cannot override existing ', PARENT = 'parent', SUPER = '__super',
+	var ERR_MSG   = ' already exists. Cannot override existing ', PARENT = 'parent', SUPER = '__super',
+		Module    = n8iv.ENV != 'commonjs' ? N : require( 'module' ),
 		defaults  = ( CTOR + ' extend mixin module singleton type' ).split( ' ' ),
 		desc_noop = n8iv.describe( n8iv.noop, cw ),
-		dumb      = n8iv.obj(), re_dot   = /\./g,
+		dumb      = n8iv.obj(), re_dot   = /\./g,      re_root  = /^\u005E/,
 		reg_path  = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj(); // <- Object.create( null ); resolves issue in safari with using {}
 
 	reserved[CTOR] = reserved[PARENT] = reserved[SUPER] = reserved[TYPE] = T;

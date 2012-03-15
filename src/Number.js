@@ -22,5 +22,5 @@ n8iv.defs( Number[PROTO], {
 		n8iv.range( 0, this ).forEach( fn, ctx || root );
 		return this;
 	},
-	toHex : function( o ) { return this.pad( 2, 16 ); }
+	toHex : function() { return this.pad( 2, 16 ); }
 }, r );

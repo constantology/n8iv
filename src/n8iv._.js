@@ -238,8 +238,9 @@
 	}, r );
 
 	defs( String[PROTO], {
-		endsWith : function( s ) { return this[LEN] && this.lastIndexOf( s ) == ( this[LEN] - s[LEN] ); },
-		lc       : function() { return lc( this ); }
+		endsWith   : function( s ) { return this[LEN] && this.lastIndexOf( s ) == ( this[LEN] - s[LEN] ); },
+		lc         : function()    { return lc( this ); },
+		startsWith : function( s ) { return !this.indexOf( s ); }
 	}, r );
 
 // if env === nodejs we want root to be global and we want to do it down here so we don't break anything up there

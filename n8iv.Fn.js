@@ -326,7 +326,7 @@
             n8iv.range(0, this).forEach(fn, ctx || root);
             return this;
         },
-        toHex : function(o) {
+        toHex : function() {
             return this.pad(2, 16);
         }
     }, r);
@@ -401,9 +401,6 @@
                 n = parseInt(n, 10);
                 if (isNaN(n) || this[LEN] < n || n == 0) return [ String(this) ];
                 return this.match(cache_slices[n] || (cache_slices[n] = new RegExp("(.{1," + n + "})", "g")));
-            },
-            startsWith : function(s) {
-                return !this.indexOf(s);
             },
             times : function(n) {
                 return (new Array(Number.toInteger(n) + 1)).join(this);
