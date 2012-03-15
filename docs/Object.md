@@ -141,6 +141,9 @@ Returns the `length` property of the Array returned when executing `Object.keys`
 
    Object.len( [1, 2, 3] );                       // returns => 3
 
+   Object.len( { one : 1, two : 2, three : 3 } ) === Object.keys( { one : 1, two : 2, three : 3 } ).length
+   // returns => true
+
 ```
 
 ### ownKeys( object:Object ):String[]
@@ -170,6 +173,9 @@ Returns the `length` property of the Array returned when executing `Object.ownKe
    Object.ownLen( [1, 2, 3] );                       // returns => 4
 
    Object.len( [1, 2 ,3] );                          // returns => 3
+
+   Object.ownLen( [1, 2, 3] ) === Object.getOwnPropertyNames( [1, 2, 3] ).length
+   // returns => true
 
 ```
 
