@@ -10,16 +10,24 @@
             ns = ns.split(".");
             break;
           default:
-            return ctx || ENV != CJS ? root : module.exports;
+            return blessCTX(ctx);
         }
-        ctx || (ctx = ENV != CJS ? root : module.exports);
-        ns[0] != "n8iv" || (ctx = n8iv, ns.shift());
+        if (re_n8iv.test(ns[0])) {
+            ctx = n8iv;
+            ns.shift();
+        }
+        if (!ns[LEN]) return blessCTX(ctx);
+        !ns[0].startsWith("^") || (ctx ? ns.shift() : ns[0] = ns[0].substring(1));
+        ctx = blessCTX(ctx);
         ns.forEach(function(o) {
             if (!o) return;
             got(ctx, o) || (ctx[o] = n8iv_obj());
             ctx = ctx[o];
         });
         return ctx;
+    }
+    function blessCTX(ctx) {
+        if (ENV == CJS) return ctx ? ctx instanceof Module ? ctx[EXPS] : ctx : module[EXPS]; else return ctx || root;
     }
     function bool(o) {
         switch (n8iv_type(o)) {
@@ -169,10 +177,10 @@
     function isUndef(o) {
         return typeof o == UNDEF;
     }
-    var F = !1, N = null, T = !0, U, ARR = "array", BOOL = "boolean", CJS = "commonjs", CTOR = "constructor", ERR = "error", FN = "function", LEN = "length", NUM = "number", OBJ = "object", NOBJ = N + OBJ, PROTO = "prototype", STR = "string", TYPE = "__type__", UNDEF = "" + U, OP = Object[PROTO], ENV = typeof module != UNDEF && "exports" in module ? CJS : typeof navigator != UNDEF ? "ua" : "other", booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
+    var F = !1, N = null, T = !0, U, ARR = "array", BOOL = "boolean", CJS = "commonjs", CTOR = "constructor", ERR = "error", EXPS = "exports", FN = "function", LEN = "length", NUM = "number", OBJ = "object", NOBJ = N + OBJ, PROTO = "prototype", STR = "string", TYPE = "__type__", UNDEF = "" + U, ENV = typeof module != UNDEF && EXPS in module ? CJS : typeof navigator != UNDEF ? "browser" : "other", OP = Object[PROTO], Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
         o[String(v)] = v;
         return o;
-    }, n8iv_obj()), c = "c", cw = "cw", r = "r", id_count = 999, id_prefix = "anon__", modes = function() {
+    }, n8iv_obj()), c = "c", cw = "cw", id_count = 999, id_prefix = "anon__", modes = function() {
         var f = "configurable enumerable writable".split(" "), m = {
             ce : "ec",
             cw : "wc",
@@ -198,7 +206,7 @@
             });
             return o;
         }, n8iv_obj());
-    }(), re_col = /htmlcollection|nodelist/, re_el = /^html\w+?element$/, re_global = /domprototype|global|window/i, re_type = /\[[^\s]+\s([^\]]+)\]/, re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/, slice = Array[PROTO].slice, types = {
+    }(), r = "r", re_col = /htmlcollection|nodelist/, re_el = /^html\w+?element$/, re_global = /global|window/i, re_n8iv = /^\u005E?n8iv/, re_type = /\[[^\s]+\s([^\]]+)\]/, re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/, slice = Array[PROTO].slice, types = {
         "[object Object]" : OBJ
     };
     n8iv = n8iv_obj();
@@ -301,7 +309,7 @@
     try {
         ENV != CJS ? def(root, "n8iv", describe({
             value : n8iv
-        }, r)) : module.exports = n8iv;
+        }, r)) : module[EXPS] = n8iv;
     } catch (e) {}
     defs(n8iv, {
         ENV : ENV,

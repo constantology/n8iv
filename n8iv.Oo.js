@@ -6,12 +6,12 @@
                 desc = path;
                 path = "";
             }
-            var C, name, ns, _ctor = desc[CTOR], _proto = n8iv.obj(), _super = desc.extend || Object, mod = getModule(desc.module), mixin = desc.mixin || dumb, singleton = desc.singleton, type = getType(desc.type || path);
+            var C, name, ns, _ctor, _proto = n8iv.obj(), _super = desc.extend || Object, mod = desc.module, mixin = desc.mixin || dumb, singleton = desc.singleton, type = getType(desc.type || path);
             !n8iv.isStr(_super) || (_super = reg_path[_super] || reg_type[_super]);
+            _ctor = desc[CTOR] !== Object ? desc[CTOR] : _super;
             if (path) {
                 ns = path.split(".");
                 name = ns.pop();
-                !ns[LEN] || !ns[0].startsWith("^") || (mod ? ns.shift() : ns[0] = ns[0].substring(1));
                 ns = n8iv.bless(ns, mod);
             }
             n8iv.def(_proto, PARENT, n8iv.describe(n8iv.noop, cw), T);
@@ -82,9 +82,6 @@
             }
             return C;
         }
-        function getModule(mod) {
-            return !mod ? N : Module && mod instanceof Module ? mod.exports || (mod.exports = n8iv.obj()) : mod;
-        }
         function getType(type) {
             return type.replace(re_root, "").replace(re_dot, "_").lc();
         }
@@ -125,7 +122,7 @@
                 return this.chain !== F && o === U ? this : o;
             }.mimic(m, name);
         }
-        var ERR_MSG = " already exists. Cannot override existing ", PARENT = "parent", SUPER = "__super", Module = n8iv.ENV != "commonjs" ? N : require("module"), defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, re_root = /^\u005E/, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
+        var ERR_MSG = " already exists. Cannot override existing ", PARENT = "parent", SUPER = "__super", defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, re_root = /^\u005E/, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
         reserved[CTOR] = reserved[PARENT] = reserved[SUPER] = reserved[TYPE] = T;
         n8iv.def(Class, "is", n8iv.describe(is, r)).def(Class, "type", n8iv.describe(type, r)).def(n8iv, "Class", n8iv.describe(Class, r)).def(n8iv, "create", n8iv.describe(function(n) {
             var C = reg_type[n] || reg_type["n8iv_" + n] || reg_path[n], args = Array.from(arguments, 1);
