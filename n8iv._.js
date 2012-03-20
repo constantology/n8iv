@@ -1,4 +1,4 @@
-!function(root) {
+(function(root) {
     function $A(a, i, j) {
         return got(a, LEN) ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a[LEN]) : [ a ];
     }
@@ -195,8 +195,7 @@
             ew : [ F, T, T ],
             r : [ F, F, F ],
             w : [ F, F, T ]
-        };
-        return Object.keys(p).reduce(function(o, k) {
+        }, v = Object.keys(p).reduce(function(o, k) {
             o[k] = f.reduce(function(v, f, i) {
                 v[f] = p[k][i];
                 return v;
@@ -206,10 +205,11 @@
             });
             return o;
         }, n8iv_obj());
-    }(), r = "r", re_col = /htmlcollection|nodelist/, re_el = /^html\w+?element$/, re_global = /global|window/i, re_n8iv = /^\u005E?n8iv/, re_type = /\[[^\s]+\s([^\]]+)\]/, re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/, slice = Array[PROTO].slice, types = {
+        delete v[UNDEF];
+        return v;
+    }(), n8iv = n8iv_obj(), r = "r", re_col = /htmlcollection|nodelist/, re_el = /^html\w+?element$/, re_global = /global|window/i, re_n8iv = /^\u005E?n8iv/, re_type = /\[[^\s]+\s([^\]]+)\]/, re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/, slice = Array[PROTO].slice, types = {
         "[object Object]" : OBJ
     };
-    n8iv = n8iv_obj();
     def(OP, TYPE, copy({
         get : __type__
     }, modes.r));
@@ -239,7 +239,7 @@
             return o;
         },
         value : function(o, k) {
-            if (isNaN(k) && k.indexOf(".") > -1) {
+            if (isNaN(k) && !!~k.indexOf(".")) {
                 var v;
                 k = k.split(".");
                 while (v = k.shift()) {
@@ -306,11 +306,9 @@
         }
     }, r);
     typeof global == UNDEF || (root = global);
-    try {
-        ENV != CJS ? def(root, "n8iv", describe({
-            value : n8iv
-        }, r)) : module[EXPS] = n8iv;
-    } catch (e) {}
+    ENV != CJS ? def(root, "n8iv", describe({
+        value : n8iv
+    }, r)) : module[EXPS] = n8iv;
     defs(n8iv, {
         ENV : ENV,
         modes : modes,
@@ -348,4 +346,5 @@
         type : n8iv_type,
         valof : valof
     }, r);
-}(this);
+    return n8iv;
+})(this);

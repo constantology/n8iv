@@ -148,6 +148,6 @@
 
 			C || ( n8iv.trace().error( new Error( n + ' does not match any registered n8iv.Classes.' ), T ) );
 
-			return C.create.apply( root, args );
+			return C.create.apply( n8iv.global, args );
 		}, r ) );
 }();

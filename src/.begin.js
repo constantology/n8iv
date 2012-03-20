@@ -1,2 +1,1 @@
-!function( root, n8iv ) {
-
+!function( n8iv ) {

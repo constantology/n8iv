@@ -1,4 +1,4 @@
-!function( root ) {
+( function( root ) {
 // utils
 	function $A( a, i, j ) { return got( a, LEN ) ? slice.call( a, ( isNum( i ) ? i > 0 ? i : 0 : 0 ), ( isNum( j ) ? j > i ? j : i + 1 : a[LEN] ) ) : [a]; }
 
@@ -149,20 +149,20 @@
 		modes     = function() {
 			var f = 'configurable enumerable writable'.split( ' ' ),
 				m = { ce : 'ec', cw : 'wc', ew : 'we', cew : 'cwe ecw ewc wce wec'.split( ' ' ) },
-				p = { c : [T, F, F], ce : [T, T, F], cew : [T, T, T], cw : [T, F, T], e : [F, T, F], ew : [F, T, T], r : [F, F, F], w : [F, F, T] };
-
-			return Object.keys( p ).reduce( function( o, k ) {
-				o[k] = f.reduce( function( v, f, i ) { v[f] = p[k][i]; return v; }, n8iv_obj() );
-				!( k in m ) || typeof m[k] == STR ? ( o[m[k]] = o[k] ) : m[k].forEach( function( f ) { o[f] = o[k]; } );
-				return o;
-			}, n8iv_obj() );
-		}(),    r = 'r',
+				p = { c : [T, F, F], ce : [T, T, F], cew : [T, T, T], cw : [T, F, T], e : [F, T, F], ew : [F, T, T], r : [F, F, F], w : [F, F, T] },
+				v = Object.keys( p ).reduce( function( o, k ) {
+					o[k] = f.reduce( function( v, f, i ) { v[f] = p[k][i]; return v; }, n8iv_obj() );
+					!( k in m ) || typeof m[k] == STR ? ( o[m[k]] = o[k] ) : m[k].forEach( function( f ) { o[f] = o[k]; } );
+					return o;
+				}, n8iv_obj() );
+			delete v[UNDEF];
+			return v;
+		}(),
+		n8iv      = n8iv_obj(),                    r         = 'r',
 		re_col    = /htmlcollection|nodelist/,     re_el     = /^html\w+?element$/,
 		re_global = /global|window/i,              re_n8iv   = /^\u005E?n8iv/,
 		re_type   = /\[[^\s]+\s([^\]]+)\]/,        re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/,
 		slice     = Array[PROTO].slice,            types     = { '[object Object]' : OBJ };
-
-	n8iv = n8iv_obj();
 
 /**
 * The methods defined here are required for n8iv to work when any of, n8iv._, n8iv.Fn AND n8iv.Oo, are present.
@@ -251,11 +251,10 @@
 		startsWith : function( s ) { return !this.indexOf( s ); }
 	}, r );
 
-// if env === nodejs we want root to be global and we want to do it down here so we don't break anything up there
+// if ENV === commonjs we want root to be global and we want to do it down here so we don't break anything up there
 	typeof global == UNDEF || ( root = global );
-	try { // expose n8iv: JavaScript Natives are exposed by default, as such we do not need to worry about adding them to module.exports
-		ENV != CJS ? def( root, 'n8iv', describe( { value : n8iv }, r ) ) : ( module[EXPS] = n8iv );
-	} catch( e ) {}
+// expose n8iv: JavaScript Natives are exposed by default, as such we do not need to worry about adding them to module.exports
+	ENV != CJS ? def( root, 'n8iv', describe( { value : n8iv }, r ) ) : ( module[EXPS] = n8iv );
 
 	defs( n8iv, {
 	// properties
@@ -269,4 +268,6 @@
 		requite    : requite,    tostr    : tostr,    trace       : trace,       type   : n8iv_type,  valof   : valof
 	}, r );
 
-}( this );
+	return n8iv;
+
+}( this ) );

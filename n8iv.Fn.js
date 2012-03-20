@@ -1,4 +1,4 @@
-!function(root, n8iv) {
+!function(n8iv) {
     var LEN = "length", PROTO = "prototype", F = !1, N = null, T = !0, r = "r";
     function aggregate(o, val, fn, ctx) {
         ctx || (ctx = o);
@@ -323,7 +323,7 @@
             return "0".times(l - s[LEN]) + s;
         },
         times : function(fn, ctx) {
-            n8iv.range(0, this).forEach(fn, ctx || root);
+            n8iv.range(0, this).forEach(fn, ctx || n8iv.global);
             return this;
         },
         toHex : function() {
@@ -456,5 +456,5 @@
             }
         };
     }(), r);
-    n8iv.ENV != "commonjs" || (module.exports = n8iv);
-}(this, typeof n8iv == "undefined" ? this.document ? this.n8iv : require("./n8iv._") : n8iv);
+    n8iv.ENV != "commonjs" || module.exports === n8iv || (module.exports = n8iv);
+}(typeof n8iv != "undefined" ? n8iv : typeof require != "undefined" ? require("./n8iv._") : N);

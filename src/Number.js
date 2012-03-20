@@ -19,7 +19,7 @@ n8iv.defs( Number[PROTO], {
 		return '0'.times( l - s[LEN] ) + s;
 	},
 	times : function( fn, ctx ) {
-		n8iv.range( 0, this ).forEach( fn, ctx || root );
+		n8iv.range( 0, this ).forEach( fn, ctx || n8iv.global );
 		return this;
 	},
 	toHex : function() { return this.pad( 2, 16 ); }

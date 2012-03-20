@@ -1,4 +1,4 @@
-!function(root, n8iv) {
+!function(n8iv) {
     var F = !1, N = null, T = !0, U, cw = "cw", r = "r", ARR = "array", CTOR = "constructor", FN = "function", LEN = "length", OBJ = "object", NOBJ = N + OBJ, PROTO = "prototype", TYPE = "__type__";
     !function() {
         function Class(path, desc) {
@@ -127,7 +127,7 @@
         n8iv.def(Class, "is", n8iv.describe(is, r)).def(Class, "type", n8iv.describe(type, r)).def(n8iv, "Class", n8iv.describe(Class, r)).def(n8iv, "create", n8iv.describe(function(n) {
             var C = reg_type[n] || reg_type["n8iv_" + n] || reg_path[n], args = Array.from(arguments, 1);
             C || n8iv.trace().error(new Error(n + " does not match any registered n8iv.Classes."), T);
-            return C.create.apply(root, args);
+            return C.create.apply(n8iv.global, args);
         }, r));
     }();
     n8iv.Class("n8iv.Callback", function() {
@@ -506,5 +506,5 @@
             _destroy : n8iv.noop
         };
     }());
-    n8iv.ENV != "commonjs" || (module.exports = n8iv);
-}(this, typeof n8iv == "undefined" ? this.document ? this.n8iv : require("./n8iv._") : n8iv);
+    n8iv.ENV != "commonjs" || module.exports === n8iv || (module.exports = n8iv);
+}(typeof n8iv != "undefined" ? n8iv : typeof require != "undefined" ? require("./n8iv._") : N);
