@@ -26,14 +26,14 @@ This is an, as yet, untested framework, use at your own risk!
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tbody>
-		<tr><td style="width : 80px ;">n8iv._.js</td><td style="width : 48px ;">3.4kb</td><td>deflate</td>
-		<tr><td>n8iv._.min.js</td><td>2.5kb</td><td>uglified + deflate</td>
+		<tr><td style="width : 80px ;">n8iv._.js</td><td style="width : 48px ;">3.5kb</td><td>deflate</td>
+		<tr><td>n8iv._.min.js</td><td>2.6kb</td><td>uglified + deflate</td>
 		<tr><td>n8iv.Fn.js</td><td>4.0kb</td><td>deflate</td>
-		<tr><td>n8iv.Fn.min.js</td><td>3.0kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.Oo.js</td><td>4.4kb</td><td>deflate</td>
-		<tr><td>n8iv.Oo.min.js</td><td>3.2kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.js</td><td>10.8kb</td><td>deflate</td>
-		<tr><td>n8iv.min.js</td><td>8.1kb</td><td>uglified + deflate</td>
+		<tr><td>n8iv.Fn.min.js</td><td>3.1kb</td><td>uglified + deflate</td>
+		<tr><td>n8iv.Oo.js</td><td>4.5kb</td><td>deflate</td>
+		<tr><td>n8iv.Oo.min.js</td><td>3.4kb</td><td>uglified + deflate</td>
+		<tr><td>n8iv.js</td><td>11.1kb</td><td>deflate</td>
+		<tr><td>n8iv.min.js</td><td>8.2kb</td><td>uglified + deflate</td>
 	</tbody>
 </table>
 
