@@ -1,4 +1,4 @@
-n8iv.defs( String[PROTO], function() {
+n8iv.defs( String.prototype, function() {
 	var cache_chars     = n8iv.obj(),
 		cache_slices    = n8iv.obj(),
 		esc_chars       = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
@@ -43,7 +43,7 @@ n8iv.defs( String[PROTO], function() {
 		includes     : function( s ) { return this.lc().contains( String( s ).lc() ); },
 		parts        : function( re ) {
 			var m = Array.from( this.match( re ) );
-			switch ( m[LEN] ) {
+			switch ( m.length ) {
 				case 1  : if ( m[0] === N || m[0] === this ) return [];
 				default : m[0] !== this || m.shift(); return m;
 			}
@@ -52,7 +52,7 @@ n8iv.defs( String[PROTO], function() {
 		regexpEsc    : function() { return this.replace( esc_chars, esc_val ); },
 		sliceEvery   : function( n ) {
 			n = parseInt( n, 10 );
-			if ( isNaN( n ) || this[LEN] < n || n == 0 ) return [String( this )];
+			if ( isNaN( n ) || this.length < n || n == 0 ) return [String( this )];
 			return this.match( cache_slices[n] || ( cache_slices[n] = new RegExp( '(.{1,' + n + '})', 'g' ) ) );
 		},
 		times        : function( n ) { return new Array( Number.toInteger( n ) + 1 ).join( this ); },
@@ -67,12 +67,12 @@ n8iv.defs( String[PROTO], function() {
 			function toHex( o ) { return parseInt( o, 10 ).pad( 2, 16 ); }
 			return function() {
 				var m = this.match( re_rgb );
-				return '#' + ( ( m[LEN] == 1 ) ? toHex( m[0] ).times( 3 ) : m.map( toHex ).join( '' ) );
+				return '#' + ( ( m.length == 1 ) ? toHex( m[0] ).times( 3 ) : m.map( toHex ).join( '' ) );
 			}
 		}() ),
 		toJSON       : function() { return JSON.parse( this ); },
 		toRGB        : function( as_array ) {
-			var o = this.match( re_hex )[1], l = o[LEN], v;
+			var o = this.match( re_hex )[1], l = o.length, v;
 			switch( l ) {
 				case 6  : break;
 				case 3  : o = this.times( 2 ); break;
@@ -84,9 +84,9 @@ n8iv.defs( String[PROTO], function() {
 		},
 		truncate     : function( i, c ) {
 			i || ( i = 50 ); n8iv.isStr( c ) || ( c = '...' );
-			return this[LEN] < i ? String( this ) : this.substring( 0, i ).trimRight() + c;
+			return this.length < i ? String( this ) : this.substring( 0, i ).trimRight() + c;
 		},
 		uc           : function() { return this.toUpperCase(); },
 		underscore   : function() { return splitString( this ).join( '_' ).lc(); }
 	};
-}(), r );
+}(), 'r' );

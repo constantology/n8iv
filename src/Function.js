@@ -1,14 +1,14 @@
-n8iv.defs( Function[PROTO], function() {
+n8iv.defs( Function.prototype, function() {
 	var re_args  = /^[\s\(]*function[^\(]*\(([^\)]*)\)/,
 		re_split = /\s*,\s*/;
 
-	n8iv.def( Function, 'from', n8iv.describe( function from( o ) { return n8iv.isFn( o ) ? o : function() { return o; }; }, r ) );
+	n8iv.def( Function, 'from', n8iv.describe( function from( o ) { return n8iv.isFn( o ) ? o : function() { return o; }; }, 'r' ) );
 
 	return {
 // properties
 		params : { get : function() {
 			var names = String( this ).match( re_args )[1].trim().split( re_split );
-			return names[LEN] == 1 && !names[0] ? [] : names;
+			return names.length == 1 && !names[0] ? [] : names;
 		} },
 // methods
 		attempt   : function( ctx ) {
@@ -20,7 +20,7 @@ n8iv.defs( Function[PROTO], function() {
 		},
 		bake      : function() {
 			var baked = 'baked', fn = this;
-			return fn[baked] || !n8iv.def( fn, baked, n8iv.describe( function() { return fn.apply( this, [this].concat( Array.from( arguments ) ) ); }.mimic( fn ), r ) ) || fn[baked];
+			return fn[baked] || !n8iv.def( fn, baked, n8iv.describe( function() { return fn.apply( this, [this].concat( Array.from( arguments ) ) ); }.mimic( fn ), 'r' ) ) || fn[baked];
 		},
 		defer     : n8iv.ENV == 'commonjs'
 				  ? function( ctx ) { return process.nextTick( this.bind.apply( this, [ctx].concat( Array.from( arguments, 1 ) ) ) ); }
@@ -57,4 +57,4 @@ n8iv.defs( Function[PROTO], function() {
 			}.mimic( wrapper );
 		}
 	};
-}(), r );
+}(), 'r' );

@@ -3,12 +3,12 @@ n8iv.Class( 'n8iv.Hash', function() {
 
 	return {
 		constructor : function Hash( o ) {
-			n8iv.def( this, ID, n8iv.describe( cache.push( n8iv.obj() ) - 1, r ) );
+			n8iv.def( this, ID, n8iv.describe( cache.push( n8iv.obj() ) - 1, 'r' ) );
 			!n8iv.isObj( o ) || this.set( o );
 		},
 
 		keys        : { get : function() { return Object.keys( cache[this[ID]] ); } },
-		length      : { get : function() { return this.keys[LEN]; } },
+		length      : { get : function() { return this.keys.length; } },
 		values      : { get : function() { return Object.values( cache[this[ID]] ); } },
 
 		aggregate   : function( val, fn, ctx ) {
@@ -32,9 +32,9 @@ n8iv.Class( 'n8iv.Hash', function() {
 		remove      : function( k ) { return n8iv.has( cache[this[ID]], k ) ? ( delete cache[this[ID]][k] ) : F; },
 		set         : function( o, v ) {
 			switch ( n8iv.type( o ) ) {
-				case  OBJ :
-				case NOBJ : Object.keys( o ).forEach( function( k ) { this.set( k, o[k] ); }, this ); break;
-				default   : cache[this[ID]][o] = v;
+				case 'object'     :
+				case 'nullobject' : Object.keys( o ).forEach( function( k ) { this.set( k, o[k] ); }, this ); break;
+				default           : cache[this[ID]][o] = v;
 			}
 		},
 		stringify   : function() { return JSON.stringify( cache[this[ID]] ); },

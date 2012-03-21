@@ -13,14 +13,14 @@ n8iv.defs( Number, function() {
 	};
 }(), 'cw' );
 
-n8iv.defs( Number[PROTO], {
+n8iv.defs( Number.prototype, {
 	pad   : function( l, radix ) {
 		var s = this.toString( radix || 10 );
-		return '0'.times( l - s[LEN] ) + s;
+		return '0'.times( l - s.length ) + s;
 	},
 	times : function( fn, ctx ) {
 		n8iv.range( 0, this ).forEach( fn, ctx || n8iv.global );
 		return this;
 	},
 	toHex : function() { return this.pad( 2, 16 ); }
-}, r );
+}, 'r' );

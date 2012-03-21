@@ -10,17 +10,17 @@ n8iv.Class( 'n8iv.Observer', function() {
 			s = !n8iv.isUndef( l[_ctx]     ) ? l[_ctx]     : ctx;
 
 			switch ( n8iv.type( l ) ) {
-				case FN  : this.on( k, l, ctx, opt );
+				case 'function' : this.on( k, l, ctx, opt );
 					break;
-				case OBJ : case NOBJ :
+				case 'object'   : case 'nullobject' :
 					switch( n8iv.type( l[_fn] ) ) {
-						case FN  : case OBJ : case NOBJ : this.on( k, l[_fn], s, o );
+						case 'function' : case 'object' : case 'nullobject' : this.on( k, l[_fn], s, o );
 							break;
-						case ARR : l[_fn].forEach( function( fn ) { this.on( k, fn, s, o ); }, this );
+						case 'array'    : l[_fn].forEach( function( fn ) { this.on( k, fn, s, o ); }, this );
 							break;
 					}
 					break;
-				case ARR : l.forEach( function( fn ) { this.on( k, fn, ctx, opt ); }, this );
+				case 'array'    : l.forEach( function( fn ) { this.on( k, fn, ctx, opt ); }, this );
 					break;
 			}
 		}
@@ -89,10 +89,10 @@ n8iv.Class( 'n8iv.Observer', function() {
 
 		if ( n8iv.isObj( event ) ) return addObservers.call( this, event );
 		switch ( ( fnt = n8iv.nativeType( fn ) ) ) {
-			case  ARR     :
+			case  'array' :
 				cb = n8iv.obj(); cb[event] = { fn : fn, options : o, ctx : ctx };
 				return addObservers.call( this, cb );
-			case  OBJ     : case NOBJ : case 'n8iv_callback' : if ( 'handleEvent' in fn ) {
+			case  'object' : case 'nullobject' : case 'n8iv_callback' : if ( 'handleEvent' in fn ) {
 				!( n8iv.isObj( ctx ) && n8iv.isUndef( o ) ) || ( o = ctx );
 				ctx = fn; fn = handleEvent( fn );
 			} break;
@@ -103,11 +103,11 @@ n8iv.Class( 'n8iv.Observer', function() {
 		( q = e.get( event ) ) || e.set( event, ( q = [] ) );
 
 		switch( n8iv.type( o ) ) {
-			case 'boolean' : o = { single : !!o  }; break;
-			case 'number'  : o = { delay  :   o  }; break;
-			case  OBJ      :
-			case  NOBJ     : o = Object.clone( o ); break;
-			default        : o = n8iv.obj();
+			case 'boolean'    : o = { single : !!o  }; break;
+			case 'number'     : o = { delay  :   o  }; break;
+			case 'object'     :
+			case 'nullobject' : o = Object.clone( o ); break;
+			default           : o = n8iv.obj();
 		}
 
 		Array.isArray( o.args ) || ( o.args = [] );
@@ -137,12 +137,12 @@ n8iv.Class( 'n8iv.Observer', function() {
 
 // public methods
 		broadcast      : function( event ) {
-			if ( this[_destroyed] || this[_suspended] || !this[_observers][LEN] || !event || !this[_observers].has( event = event.lc() ) ) return;
+			if ( this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has( event = event.lc() ) ) return;
 
 			var args = Array.from( arguments, 1 ),
-				e    = this[_observers].get( event ).clone(); // so we can add/ remove observers while this event is firing without disrupting the queue;
+				e    = this[_observers].get( event ).slice(); // so we can add/ remove observers while this event is firing without disrupting the queue;
 
-			if ( !e[LEN] ) return; // if no event listeners, then don't worry
+			if ( !e.length ) return; // if no event listeners, then don't worry
 
 			this[_broadcasting] = event;
 

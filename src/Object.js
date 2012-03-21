@@ -16,7 +16,7 @@
 		}
 		return o == k;
 	}
-	function  arraysEqual( a1, a2 ) { return a1[LEN] == a2[LEN] && Array.from( a1 ).every( function( v, i ) { return equalTo( a2[i], v ); } ); }
+	function  arraysEqual( a1, a2 ) { return a1.length == a2.length && Array.from( a1 ).every( function( v, i ) { return equalTo( a2[i], v ); } ); }
 	function objectsEqual( o1, o2 ) {
 		if ( Object.len( o1 ) !== Object.len( o2 ) || ownLen( o1 ) !== ownLen( o2 ) ) return F;
 		for ( var k in o2 ) if ( n8iv.has( o1, k ) !== n8iv.has( o2, k ) || !equalTo( o1[k], o2[k] ) ) return F;
@@ -25,8 +25,8 @@
 
 	function ownKeys( o ) { return Object.getOwnPropertyNames( o ); }
 
-	function ownLen( o ) { return ownKeys( o )[LEN]; }
+	function ownLen( o ) { return ownKeys( o ).length; }
 
 	function reduce( o, fn, val ) { return Object.keys( o ).reduce( function( res, k, i ) { return fn.call( o, res, o[k], k, o, i ); }, val ); }
 
-	n8iv.defs( Object, { aggregate : aggregate, clear : clear, equalTo : equalTo, ownKeys : ownKeys, ownLen : ownLen, reduce : reduce }, r );
+	n8iv.defs( Object, { aggregate : aggregate, clear : clear, equalTo : equalTo, ownKeys : ownKeys, ownLen : ownLen, reduce : reduce }, 'r' );

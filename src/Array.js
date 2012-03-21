@@ -1,4 +1,4 @@
-n8iv.defs( Array[PROTO], function() {
+n8iv.defs( Array.prototype, function() {
 	function groupByFn( field, v ) { return field( v ) ? 0 : 1; }
 	function groupByRegExp( field, v ) { return field.test( v ) ? 0 : 1; }
 	function groupByStr( field, v ) { return Object.value( v, field ) || 1; }
@@ -6,7 +6,7 @@ n8iv.defs( Array[PROTO], function() {
 	function sortedVal( o )  { return o[0]; }
 	function sortingVal( o ) { return [o, ( n8iv.isFn( this ) ? this( o ) : Object.value( o, this ) )]; }
 	
-	var AP   = Array[PROTO],
+	var AP   = Array.prototype,
 		sort = {
 			desc : function( a, b ) { return a[1] == b[1] ? 0 : a[1] < b[1] ? 1 : -1; },
 			asc  : function( a, b ) { return a[1] == b[1] ? 0 : a[1] > b[1] ? 1 : -1; }
@@ -15,7 +15,7 @@ n8iv.defs( Array[PROTO], function() {
 	sort[String(  T )] = sort[1] = sort.asc;
 	sort[String( !1 )] = sort[0] = sort.desc;
 
-	n8iv.def( Array, 'sortFns', n8iv.describe( { value : sort }, r ) );
+	n8iv.def( Array, 'sortFns', n8iv.describe( { value : sort }, 'r' ) );
 
 	return {
 		aggregate : function( val, fn, ctx ) { return AP.reduce.call( this, function( val, o, i, a ) { return fn.call( ctx || o, val, o, i, a ); }, val ); },
@@ -26,7 +26,7 @@ n8iv.defs( Array[PROTO], function() {
 				return o;
 			}, n8iv.obj() );
 		},
-		clear     : function() { this[LEN] = 0; return this; },
+		clear     : function() { this.length = 0; return this; },
 		clone     : function() { return AP.slice.call( this ); },
 		compact   : function( falsey ) { return AP.mapc.call( this, falsey === T ? isFalsey : n8iv.requite ); },
 		contains  : function( o ) { return !!~AP.indexOf.call( this, o ); },
@@ -37,7 +37,7 @@ n8iv.defs( Array[PROTO], function() {
 				else return this;
 			}
 			return AP.aggregate.call( this, [], function( v, o, i ) {
-				Array.isArray( o ) ? v.splice.apply( v, [v[LEN], 0].concat( o.flatten( n ) ) ) : v.push( o );
+				Array.isArray( o ) ? v.splice.apply( v, [v.length, 0].concat( o.flatten( n ) ) ) : v.push( o );
 				return v;
 			}, this );
 		},
@@ -78,8 +78,8 @@ n8iv.defs( Array[PROTO], function() {
 			var args = Array.from( arguments, 1 );
 			return AP.mapc.call( this, function( o, i ) { return n8iv.isFn( o[fn] ) ? o[fn].apply( o, args ) : N; } );
 		}, 
-		item      : function( i ) { return this[i < 0 ? this[LEN] + i : i]; },
-		last      : function() { return this[this[LEN] - 1]; },
+		item      : function( i ) { return this[i < 0 ? this.length + i : i]; },
+		last      : function() { return this[this.length - 1]; },
 		mapc      : function( fn, ctx ) {
 			ctx || ( ctx = this );
 			return AP.reduce.call( this, function( v, o, i, a ) {
@@ -114,4 +114,4 @@ n8iv.defs( Array[PROTO], function() {
 			return AP.map.call( this, function( o, i ) { return args.pluck( i ); } );
 		}
 	};
-}(), r );
+}(), 'r' );

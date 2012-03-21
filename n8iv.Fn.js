@@ -1,5 +1,5 @@
 !function(n8iv) {
-    var LEN = "length", PROTO = "prototype", F = !1, N = null, T = !0, r = "r";
+    var F = !1, N = null, T = !0;
     function aggregate(o, val, fn, ctx) {
         ctx || (ctx = o);
         return Object.keys(o).reduce(function(res, k, i) {
@@ -24,7 +24,7 @@
         return o == k;
     }
     function arraysEqual(a1, a2) {
-        return a1[LEN] == a2[LEN] && Array.from(a1).every(function(v, i) {
+        return a1.length == a2.length && Array.from(a1).every(function(v, i) {
             return equalTo(a2[i], v);
         });
     }
@@ -37,7 +37,7 @@
         return Object.getOwnPropertyNames(o);
     }
     function ownLen(o) {
-        return ownKeys(o)[LEN];
+        return ownKeys(o).length;
     }
     function reduce(o, fn, val) {
         return Object.keys(o).reduce(function(res, k, i) {
@@ -51,19 +51,19 @@
         ownKeys : ownKeys,
         ownLen : ownLen,
         reduce : reduce
-    }, r);
-    n8iv.defs(Function[PROTO], function() {
+    }, "r");
+    n8iv.defs(Function.prototype, function() {
         var re_args = /^[\s\(]*function[^\(]*\(([^\)]*)\)/, re_split = /\s*,\s*/;
         n8iv.def(Function, "from", n8iv.describe(function from(o) {
             return n8iv.isFn(o) ? o : function() {
                 return o;
             };
-        }, r));
+        }, "r"));
         return {
             params : {
                 get : function() {
                     var names = String(this).match(re_args)[1].trim().split(re_split);
-                    return names[LEN] == 1 && !names[0] ? [] : names;
+                    return names.length == 1 && !names[0] ? [] : names;
                 }
             },
             attempt : function(ctx) {
@@ -80,7 +80,7 @@
                 var baked = "baked", fn = this;
                 return fn[baked] || !n8iv.def(fn, baked, n8iv.describe(function() {
                     return fn.apply(this, [ this ].concat(Array.from(arguments)));
-                }.mimic(fn), r)) || fn[baked];
+                }.mimic(fn), "r")) || fn[baked];
             },
             defer : n8iv.ENV == "commonjs" ? function(ctx) {
                 return process.nextTick(this.bind.apply(this, [ ctx ].concat(Array.from(arguments, 1))));
@@ -127,8 +127,8 @@
                 }.mimic(wrapper);
             }
         };
-    }(), r);
-    n8iv.defs(Array[PROTO], function() {
+    }(), "r");
+    n8iv.defs(Array.prototype, function() {
         function groupByFn(field, v) {
             return field(v) ? 0 : 1;
         }
@@ -147,7 +147,7 @@
         function sortingVal(o) {
             return [ o, n8iv.isFn(this) ? this(o) : Object.value(o, this) ];
         }
-        var AP = Array[PROTO], sort = {
+        var AP = Array.prototype, sort = {
             desc : function(a, b) {
                 return a[1] == b[1] ? 0 : a[1] < b[1] ? 1 : -1;
             },
@@ -159,7 +159,7 @@
         sort[String(!1)] = sort[0] = sort.desc;
         n8iv.def(Array, "sortFns", n8iv.describe({
             value : sort
-        }, r));
+        }, "r"));
         return {
             aggregate : function(val, fn, ctx) {
                 return AP.reduce.call(this, function(val, o, i, a) {
@@ -175,7 +175,7 @@
                 }, n8iv.obj());
             },
             clear : function() {
-                this[LEN] = 0;
+                this.length = 0;
                 return this;
             },
             clone : function() {
@@ -196,7 +196,7 @@
                     if (n > 0) --n; else return this;
                 }
                 return AP.aggregate.call(this, [], function(v, o, i) {
-                    Array.isArray(o) ? v.splice.apply(v, [ v[LEN], 0 ].concat(o.flatten(n))) : v.push(o);
+                    Array.isArray(o) ? v.splice.apply(v, [ v.length, 0 ].concat(o.flatten(n))) : v.push(o);
                     return v;
                 }, this);
             },
@@ -252,10 +252,10 @@
                 });
             },
             item : function(i) {
-                return this[i < 0 ? this[LEN] + i : i];
+                return this[i < 0 ? this.length + i : i];
             },
             last : function() {
-                return this[this[LEN] - 1];
+                return this[this.length - 1];
             },
             mapc : function(fn, ctx) {
                 ctx || (ctx = this);
@@ -302,7 +302,7 @@
                 });
             }
         };
-    }(), r);
+    }(), "r");
     n8iv.defs(Number, function() {
         var abs = Math.abs, big_int = 9007199254740992, floor = Math.floor;
         return {
@@ -317,10 +317,10 @@
             }
         };
     }(), "cw");
-    n8iv.defs(Number[PROTO], {
+    n8iv.defs(Number.prototype, {
         pad : function(l, radix) {
             var s = this.toString(radix || 10);
-            return "0".times(l - s[LEN]) + s;
+            return "0".times(l - s.length) + s;
         },
         times : function(fn, ctx) {
             n8iv.range(0, this).forEach(fn, ctx || n8iv.global);
@@ -329,8 +329,8 @@
         toHex : function() {
             return this.pad(2, 16);
         }
-    }, r);
-    n8iv.defs(String[PROTO], function() {
+    }, "r");
+    n8iv.defs(String.prototype, function() {
         var cache_chars = n8iv.obj(), cache_slices = n8iv.obj(), esc_chars = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g, esc_val = "\\$1", re_caps = /([A-Z])/g, re_gsub = /\$?\{([^\}]+)\}/g, re_hex = /#?(\w{1,6})/, re_rgb = /(\d{1,3})/g, re_split_string = /[\sA-Z_-]+/g;
         function _splitString(m, p) {
             return p + p.lc();
@@ -383,7 +383,7 @@
             },
             parts : function(re) {
                 var m = Array.from(this.match(re));
-                switch (m[LEN]) {
+                switch (m.length) {
                   case 1:
                     if (m[0] === N || m[0] === this) return [];
                   default:
@@ -399,7 +399,7 @@
             },
             sliceEvery : function(n) {
                 n = parseInt(n, 10);
-                if (isNaN(n) || this[LEN] < n || n == 0) return [ String(this) ];
+                if (isNaN(n) || this.length < n || n == 0) return [ String(this) ];
                 return this.match(cache_slices[n] || (cache_slices[n] = new RegExp("(.{1," + n + "})", "g")));
             },
             times : function(n) {
@@ -418,14 +418,14 @@
                 }
                 return function() {
                     var m = this.match(re_rgb);
-                    return "#" + (m[LEN] == 1 ? toHex(m[0]).times(3) : m.map(toHex).join(""));
+                    return "#" + (m.length == 1 ? toHex(m[0]).times(3) : m.map(toHex).join(""));
                 };
             }(),
             toJSON : function() {
                 return JSON.parse(this);
             },
             toRGB : function(as_array) {
-                var o = this.match(re_hex)[1], l = o[LEN], v;
+                var o = this.match(re_hex)[1], l = o.length, v;
                 switch (l) {
                   case 6:
                     break;
@@ -446,7 +446,7 @@
             truncate : function(i, c) {
                 i || (i = 50);
                 n8iv.isStr(c) || (c = "...");
-                return this[LEN] < i ? String(this) : this.substring(0, i).trimRight() + c;
+                return this.length < i ? String(this) : this.substring(0, i).trimRight() + c;
             },
             uc : function() {
                 return this.toUpperCase();
@@ -455,6 +455,6 @@
                 return splitString(this).join("_").lc();
             }
         };
-    }(), r);
+    }(), "r");
     n8iv.ENV != "commonjs" || module.exports === n8iv || (module.exports = n8iv);
 }(typeof n8iv != "undefined" ? n8iv : typeof require != "undefined" ? require("./n8iv._") : N);

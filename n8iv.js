@@ -1,13 +1,13 @@
 !function() {
     var n8iv = function(root) {
         function $A(a, i, j) {
-            return got(a, LEN) ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a[LEN]) : [ a ];
+            return got(a, "length") ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a.length) : [ a ];
         }
         function bless(ns, ctx) {
             switch (n8iv_type(ns)) {
-              case ARR:
+              case "array":
                 break;
-              case STR:
+              case "string":
                 ns = ns.split(".");
                 break;
               default:
@@ -17,7 +17,7 @@
                 ctx = n8iv;
                 ns.shift();
             }
-            if (!ns[LEN]) return blessCTX(ctx);
+            if (!ns.length) return blessCTX(ctx);
             !ns[0].startsWith("^") || (ctx ? ns.shift() : ns[0] = ns[0].substring(1));
             ctx = blessCTX(ctx);
             ns.forEach(function(o) {
@@ -28,17 +28,17 @@
             return ctx;
         }
         function blessCTX(ctx) {
-            if (ENV == CJS) return ctx ? ctx instanceof Module ? ctx[EXPS] : ctx : module[EXPS]; else return ctx || root;
+            if (ENV == CJS) return ctx ? ctx instanceof Module ? ctx.exports : ctx : module.exports; else return ctx || root;
         }
         function bool(o) {
             switch (n8iv_type(o)) {
               case F:
                 return F;
-              case BOOL:
+              case "boolean":
                 return o;
-              case NUM:
+              case "number":
                 return o !== 0 && !isNaN(o);
-              case STR:
+              case "string":
                 return !booleans.some(function(v) {
                     return v === o;
                 });
@@ -57,11 +57,11 @@
         function def(item, name, desc, overwrite, debug) {
             var exists = got(item, name);
             !(desc.get || desc.set) || delete desc.writable;
-            if (overwrite === T || !exists) Object.defineProperty(item, name, desc); else if (debug === T && exists) trace().error(new Error("Trying to overwrite existing property: " + name + ", in: " + (isFn(item) ? item.n8ivName : item[CTOR].n8ivName) + "."), T);
+            if (overwrite === T || !exists) Object.defineProperty(item, name, desc); else if (debug === T && exists) trace().error(new Error("Trying to overwrite existing property: " + name + ", in: " + (isFn(item) ? item.n8ivName : item.constructor.n8ivName) + "."), T);
             return n8iv;
         }
         function defs(item, o, m, overwrite, debug) {
-            m || (m = cw);
+            m || (m = "cw");
             for (var k in o) !has(o, k) || def(item, k, describe(o[k], m), overwrite, debug);
             return n8iv;
         }
@@ -76,20 +76,20 @@
         function error(e, chuck) {
             var msg;
             switch (n8iv_type(e)) {
-              case ERR:
+              case "error":
                 msg = e.message;
                 break;
-              case STR:
+              case "string":
                 msg = String(e);
                 e = new Error(e);
                 break;
             }
-            !(ERR in console) || console.error(msg);
+            !("error" in console) || console.error(msg);
             if (chuck === T) throw e;
             return n8iv;
         }
         function exists(o) {
-            return o !== N && o !== U && (typeof o == NUM ? !isNaN(o) : T);
+            return o !== N && o !== U && (typeof o == "number" ? !isNaN(o) : T);
         }
         function got(o, k) {
             return k in Object(o);
@@ -107,7 +107,7 @@
             return (prefix || id_prefix) + ++id_count;
         }
         function n8iv_obj(o, n) {
-            return (n = Object.create(N)) && arguments[LEN] >= 1 ? copy(n, o) : n;
+            return (n = Object.create(N)) && arguments.length >= 1 ? copy(n, o) : n;
         }
         function n8iv_proto(o) {
             return Object.getPrototypeOf(o);
@@ -132,56 +132,56 @@
             return OP.valueOf.call(o);
         }
         function __type__() {
-            var ctor = this[CTOR], nt = nativeType(this), t = ENV != CJS ? domType(nt) : re_global.test(nt) ? "global" : F;
-            return t || (nt == OBJ && ctor[TYPE] != FN ? ctor[TYPE] || lc(ctor.n8ivName) || nt : nt);
+            var ctor = this.constructor, nt = nativeType(this), t = ENV != CJS ? domType(nt) : re_global.test(nt) ? "global" : F;
+            return t || (nt == "object" && ctor.__type__ != "function" ? ctor.__type__ || lc(ctor.n8ivName) || nt : nt);
         }
         function domType(t) {
             return re_col.test(t) ? "htmlcollection" : re_el.test(t) ? "htmlelement" : re_global.test(t) ? "global" : F;
         }
         function n8iv_type(o) {
-            return o === N || o === U ? F : o[TYPE] || (n8iv_proto(o) === N ? NOBJ : U);
+            return o === N || o === U ? F : o.__type__ || (n8iv_proto(o) === N ? "nullobject" : U);
         }
         function nativeType(o, t) {
             if ((t = tostr(o)) in types) return types[t];
             return types[t] = lc(t).match(re_type)[1].replace(re_vendor, "$1");
         }
         function isBool(o) {
-            return n8iv_type(o) == BOOL;
+            return n8iv_type(o) == "boolean";
         }
         function isEmpty(o) {
             switch (n8iv_type(o)) {
-              case ARR:
-                return !o[LEN];
-              case NUM:
+              case "array":
+                return !o.length;
+              case "number":
                 return isNaN(o);
-              case OBJ:
+              case "object":
                 return !Object.len(o);
-              case STR:
+              case "string":
                 return o === "";
               default:
                 return !exists(o);
             }
         }
         function isFn(fn) {
-            return typeof fn == FN;
+            return typeof fn == "function";
         }
         function isNum(o) {
-            return n8iv_type(o) == NUM && !isNaN(o);
+            return n8iv_type(o) == "number" && !isNaN(o);
         }
         function isObj(o, exclusive) {
             var t = n8iv_type(o);
-            return t == OBJ && nativeType(o) == OBJ || exclusive !== T && t == NOBJ;
+            return t == "object" && nativeType(o) == "object" || exclusive !== T && t == "nullobject";
         }
         function isStr(o) {
-            return n8iv_type(o) == STR;
+            return n8iv_type(o) == "string";
         }
         function isUndef(o) {
-            return typeof o == UNDEF;
+            return typeof o == "undefined";
         }
-        var F = !1, N = null, T = !0, U, ARR = "array", BOOL = "boolean", CJS = "commonjs", CTOR = "constructor", ERR = "error", EXPS = "exports", FN = "function", LEN = "length", NUM = "number", OBJ = "object", NOBJ = N + OBJ, PROTO = "prototype", STR = "string", TYPE = "__type__", UNDEF = "" + U, ENV = typeof module != UNDEF && EXPS in module ? CJS : typeof navigator != UNDEF ? "browser" : "other", OP = Object[PROTO], Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
+        var F = !1, N = null, T = !0, U, CJS = "commonjs", ENV = typeof module != "undefined" && "exports" in module ? CJS : typeof navigator != "undefined" ? "browser" : "other", OP = Object.prototype, Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
             o[String(v)] = v;
             return o;
-        }, n8iv_obj()), c = "c", cw = "cw", id_count = 999, id_prefix = "anon__", modes = function() {
+        }, n8iv_obj()), id_count = 999, id_prefix = "anon__", modes = function() {
             var f = "configurable enumerable writable".split(" "), m = {
                 ce : "ec",
                 cw : "wc",
@@ -201,20 +201,20 @@
                     v[f] = p[k][i];
                     return v;
                 }, n8iv_obj());
-                !(k in m) || typeof m[k] == STR ? o[m[k]] = o[k] : m[k].forEach(function(f) {
+                !(k in m) || typeof m[k] == "string" ? o[m[k]] = o[k] : m[k].forEach(function(f) {
                     o[f] = o[k];
                 });
                 return o;
             }, n8iv_obj());
-            delete v[UNDEF];
+            delete v.undefined;
             return v;
-        }(), n8iv = n8iv_obj(), r = "r", re_col = /htmlcollection|nodelist/, re_el = /^html\w+?element$/, re_global = /global|window/i, re_n8iv = /^\u005E?n8iv/, re_type = /\[[^\s]+\s([^\]]+)\]/, re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/, slice = Array[PROTO].slice, types = {
-            "[object Object]" : OBJ
+        }(), n8iv = n8iv_obj(), re_col = /htmlcollection|nodelist/, re_el = /^html\w+?element$/, re_global = /global|window/i, re_n8iv = /^\u005E?n8iv/, re_type = /\[[^\s]+\s([^\]]+)\]/, re_vendor = /^[Ww]ebkit|[Mm]oz|O|[Mm]s|[Kk]html(.*)$/, slice = Array.prototype.slice, types = {
+            "[object Object]" : "object"
         };
-        def(OP, TYPE, copy({
+        def(OP, "__type__", copy({
             get : __type__
         }, modes.r));
-        def(Array, "from", describe($A, r));
+        def(Array, "from", describe($A, "r"));
         defs(Object, {
             clone : function(o) {
                 return copy(n8iv_obj(), o);
@@ -231,7 +231,7 @@
                 return N;
             },
             len : function(o) {
-                return Object.keys(o)[LEN];
+                return Object.keys(o).length;
             },
             remove : function(o, keys) {
                 (Array.isArray(keys) ? keys : $A(arguments, 1)).forEach(function(k) {
@@ -256,14 +256,14 @@
                     return o[k];
                 });
             }
-        }, r);
-        def(Array[PROTO], "find", describe(function(fn, ctx) {
-            var i = -1, l = this[LEN] >>> 0;
+        }, "r");
+        def(Array.prototype, "find", describe(function(fn, ctx) {
+            var i = -1, l = this.length >>> 0;
             ctx || (ctx = this);
             while (++i < l) if (!!fn.call(ctx, this[i], i, this)) return this[i];
             return N;
-        }, r));
-        defs(Function[PROTO], {
+        }, "r"));
+        defs(Function.prototype, {
             n8ivName : {
                 get : function() {
                     var anon = "anonymous", non = [ "", "" ], namu = "__n8ivName__", re_name = /[\s\(]*function([^\(]+).*/;
@@ -280,24 +280,24 @@
                 var args = $A(arguments, 1), bound = function() {
                     return fn.apply(this instanceof bound ? this : ctx || root, args.concat($A(arguments)));
                 }, fn = this;
-                bound[PROTO] = Object.create(fn[PROTO]);
+                bound.prototype = Object.create(fn.prototype);
                 return bound.mimic(fn);
             },
             mimic : function(fn, name) {
                 return Object.defineProperties(this, {
-                    displayName : describe(name || fn.n8ivName, c),
+                    displayName : describe(name || fn.n8ivName, "c"),
                     toString : describe(function() {
                         return fn.valueOf().toString();
-                    }, c),
+                    }, "c"),
                     valueOf : describe(function() {
                         return fn;
-                    }, c)
+                    }, "c")
                 });
             }
-        }, r);
-        defs(String[PROTO], {
+        }, "r");
+        defs(String.prototype, {
             endsWith : function(s) {
-                return this[LEN] && this.lastIndexOf(s) == this[LEN] - s[LEN];
+                return this.length && this.lastIndexOf(s) == this.length - s.length;
             },
             lc : function() {
                 return lc(this);
@@ -305,11 +305,11 @@
             startsWith : function(s) {
                 return !this.indexOf(s);
             }
-        }, r);
-        typeof global == UNDEF || (root = global);
+        }, "r");
+        typeof global == "undefined" || (root = global);
         ENV != CJS ? def(root, "n8iv", describe({
             value : n8iv
-        }, r)) : module[EXPS] = n8iv;
+        }, "r")) : module.exports = n8iv;
         defs(n8iv, {
             ENV : ENV,
             modes : modes,
@@ -346,10 +346,10 @@
             trace : trace,
             type : n8iv_type,
             valof : valof
-        }, r);
+        }, "r");
         return n8iv;
     }(this);
-    var LEN = "length", PROTO = "prototype", F = !1, N = null, T = !0, r = "r";
+    var F = !1, N = null, T = !0;
     function aggregate(o, val, fn, ctx) {
         ctx || (ctx = o);
         return Object.keys(o).reduce(function(res, k, i) {
@@ -374,7 +374,7 @@
         return o == k;
     }
     function arraysEqual(a1, a2) {
-        return a1[LEN] == a2[LEN] && Array.from(a1).every(function(v, i) {
+        return a1.length == a2.length && Array.from(a1).every(function(v, i) {
             return equalTo(a2[i], v);
         });
     }
@@ -387,7 +387,7 @@
         return Object.getOwnPropertyNames(o);
     }
     function ownLen(o) {
-        return ownKeys(o)[LEN];
+        return ownKeys(o).length;
     }
     function reduce(o, fn, val) {
         return Object.keys(o).reduce(function(res, k, i) {
@@ -401,19 +401,19 @@
         ownKeys : ownKeys,
         ownLen : ownLen,
         reduce : reduce
-    }, r);
-    n8iv.defs(Function[PROTO], function() {
+    }, "r");
+    n8iv.defs(Function.prototype, function() {
         var re_args = /^[\s\(]*function[^\(]*\(([^\)]*)\)/, re_split = /\s*,\s*/;
         n8iv.def(Function, "from", n8iv.describe(function from(o) {
             return n8iv.isFn(o) ? o : function() {
                 return o;
             };
-        }, r));
+        }, "r"));
         return {
             params : {
                 get : function() {
                     var names = String(this).match(re_args)[1].trim().split(re_split);
-                    return names[LEN] == 1 && !names[0] ? [] : names;
+                    return names.length == 1 && !names[0] ? [] : names;
                 }
             },
             attempt : function(ctx) {
@@ -430,7 +430,7 @@
                 var baked = "baked", fn = this;
                 return fn[baked] || !n8iv.def(fn, baked, n8iv.describe(function() {
                     return fn.apply(this, [ this ].concat(Array.from(arguments)));
-                }.mimic(fn), r)) || fn[baked];
+                }.mimic(fn), "r")) || fn[baked];
             },
             defer : n8iv.ENV == "commonjs" ? function(ctx) {
                 return process.nextTick(this.bind.apply(this, [ ctx ].concat(Array.from(arguments, 1))));
@@ -477,8 +477,8 @@
                 }.mimic(wrapper);
             }
         };
-    }(), r);
-    n8iv.defs(Array[PROTO], function() {
+    }(), "r");
+    n8iv.defs(Array.prototype, function() {
         function groupByFn(field, v) {
             return field(v) ? 0 : 1;
         }
@@ -497,7 +497,7 @@
         function sortingVal(o) {
             return [ o, n8iv.isFn(this) ? this(o) : Object.value(o, this) ];
         }
-        var AP = Array[PROTO], sort = {
+        var AP = Array.prototype, sort = {
             desc : function(a, b) {
                 return a[1] == b[1] ? 0 : a[1] < b[1] ? 1 : -1;
             },
@@ -509,7 +509,7 @@
         sort[String(!1)] = sort[0] = sort.desc;
         n8iv.def(Array, "sortFns", n8iv.describe({
             value : sort
-        }, r));
+        }, "r"));
         return {
             aggregate : function(val, fn, ctx) {
                 return AP.reduce.call(this, function(val, o, i, a) {
@@ -525,7 +525,7 @@
                 }, n8iv.obj());
             },
             clear : function() {
-                this[LEN] = 0;
+                this.length = 0;
                 return this;
             },
             clone : function() {
@@ -546,7 +546,7 @@
                     if (n > 0) --n; else return this;
                 }
                 return AP.aggregate.call(this, [], function(v, o, i) {
-                    Array.isArray(o) ? v.splice.apply(v, [ v[LEN], 0 ].concat(o.flatten(n))) : v.push(o);
+                    Array.isArray(o) ? v.splice.apply(v, [ v.length, 0 ].concat(o.flatten(n))) : v.push(o);
                     return v;
                 }, this);
             },
@@ -602,10 +602,10 @@
                 });
             },
             item : function(i) {
-                return this[i < 0 ? this[LEN] + i : i];
+                return this[i < 0 ? this.length + i : i];
             },
             last : function() {
-                return this[this[LEN] - 1];
+                return this[this.length - 1];
             },
             mapc : function(fn, ctx) {
                 ctx || (ctx = this);
@@ -652,7 +652,7 @@
                 });
             }
         };
-    }(), r);
+    }(), "r");
     n8iv.defs(Number, function() {
         var abs = Math.abs, big_int = 9007199254740992, floor = Math.floor;
         return {
@@ -667,10 +667,10 @@
             }
         };
     }(), "cw");
-    n8iv.defs(Number[PROTO], {
+    n8iv.defs(Number.prototype, {
         pad : function(l, radix) {
             var s = this.toString(radix || 10);
-            return "0".times(l - s[LEN]) + s;
+            return "0".times(l - s.length) + s;
         },
         times : function(fn, ctx) {
             n8iv.range(0, this).forEach(fn, ctx || n8iv.global);
@@ -679,8 +679,8 @@
         toHex : function() {
             return this.pad(2, 16);
         }
-    }, r);
-    n8iv.defs(String[PROTO], function() {
+    }, "r");
+    n8iv.defs(String.prototype, function() {
         var cache_chars = n8iv.obj(), cache_slices = n8iv.obj(), esc_chars = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g, esc_val = "\\$1", re_caps = /([A-Z])/g, re_gsub = /\$?\{([^\}]+)\}/g, re_hex = /#?(\w{1,6})/, re_rgb = /(\d{1,3})/g, re_split_string = /[\sA-Z_-]+/g;
         function _splitString(m, p) {
             return p + p.lc();
@@ -733,7 +733,7 @@
             },
             parts : function(re) {
                 var m = Array.from(this.match(re));
-                switch (m[LEN]) {
+                switch (m.length) {
                   case 1:
                     if (m[0] === N || m[0] === this) return [];
                   default:
@@ -749,7 +749,7 @@
             },
             sliceEvery : function(n) {
                 n = parseInt(n, 10);
-                if (isNaN(n) || this[LEN] < n || n == 0) return [ String(this) ];
+                if (isNaN(n) || this.length < n || n == 0) return [ String(this) ];
                 return this.match(cache_slices[n] || (cache_slices[n] = new RegExp("(.{1," + n + "})", "g")));
             },
             times : function(n) {
@@ -768,14 +768,14 @@
                 }
                 return function() {
                     var m = this.match(re_rgb);
-                    return "#" + (m[LEN] == 1 ? toHex(m[0]).times(3) : m.map(toHex).join(""));
+                    return "#" + (m.length == 1 ? toHex(m[0]).times(3) : m.map(toHex).join(""));
                 };
             }(),
             toJSON : function() {
                 return JSON.parse(this);
             },
             toRGB : function(as_array) {
-                var o = this.match(re_hex)[1], l = o[LEN], v;
+                var o = this.match(re_hex)[1], l = o.length, v;
                 switch (l) {
                   case 6:
                     break;
@@ -796,7 +796,7 @@
             truncate : function(i, c) {
                 i || (i = 50);
                 n8iv.isStr(c) || (c = "...");
-                return this[LEN] < i ? String(this) : this.substring(0, i).trimRight() + c;
+                return this.length < i ? String(this) : this.substring(0, i).trimRight() + c;
             },
             uc : function() {
                 return this.toUpperCase();
@@ -805,8 +805,8 @@
                 return splitString(this).join("_").lc();
             }
         };
-    }(), r);
-    var F = !1, N = null, T = !0, U, cw = "cw", r = "r", ARR = "array", CTOR = "constructor", FN = "function", LEN = "length", OBJ = "object", NOBJ = N + OBJ, PROTO = "prototype", TYPE = "__type__";
+    }(), "r");
+    var F = !1, N = null, T = !0, U;
     !function() {
         function Class(path, desc) {
             if (!desc && n8iv.isObj(path)) {
@@ -815,37 +815,37 @@
             }
             var C, name, ns, _ctor, _proto = n8iv.obj(), _super = desc.extend || Object, mod = desc.module, mixin = desc.mixin || dumb, singleton = desc.singleton, type = getType(desc.type || path);
             !n8iv.isStr(_super) || (_super = reg_path[_super] || reg_type[_super]);
-            _ctor = desc[CTOR] !== Object ? desc[CTOR] : _super;
+            _ctor = desc.constructor !== Object ? desc.constructor : _super;
             if (path) {
                 ns = path.split(".");
                 name = ns.pop();
                 ns = n8iv.bless(ns, mod);
             }
-            n8iv.def(_proto, PARENT, n8iv.describe(n8iv.noop, cw), T);
-            n8iv.def(_proto, CTOR, n8iv.describe(ctor(_ctor, _super[PROTO][CTOR], name, _proto), r), T);
-            C = _proto[CTOR];
-            n8iv.def(C, TYPE, n8iv.describe("class", r), T);
-            n8iv.def(_proto, TYPE, n8iv.describe(type, r), T);
+            n8iv.def(_proto, "parent", n8iv.describe(n8iv.noop, "cw"), T);
+            n8iv.def(_proto, "constructor", n8iv.describe(ctor(_ctor, _super.prototype.constructor, name, _proto), "r"), T);
+            C = _proto.constructor;
+            n8iv.def(C, "__type__", n8iv.describe("class", "r"), T);
+            n8iv.def(_proto, "__type__", n8iv.describe(type, "r"), T);
             Object.remove(desc, defaults);
-            C[PROTO] = apply(_proto, n8iv.copy(desc, mixin));
-            n8iv.def(C, "create", n8iv.describe(create(extend(C, _super)), r), T);
+            C.prototype = apply(_proto, n8iv.copy(desc, mixin));
+            n8iv.def(C, "create", n8iv.describe(create(extend(C, _super)), "r"), T);
             path = path.replace(re_root, "");
             if (singleton) {
                 n8iv.def(C, "singleton", n8iv.describe({
                     value : singleton === T ? new C : C.create.apply(C, [].concat(singleton))
-                }, r));
+                }, "r"));
                 register(C, path, type);
                 C = C.singleton;
             } else if (path) register(C, path, type);
             !(name && ns) || n8iv.def(ns, name, n8iv.describe({
                 value : C
-            }, r));
+            }, "r"));
             return C;
         }
         function apply(proto, desc) {
             Object.each(desc, function(v, k) {
                 switch (n8iv.type(v)) {
-                  case OBJ:
+                  case "object":
                     n8iv.def(proto, k, v, T);
                     break;
                   default:
@@ -856,7 +856,7 @@
         }
         function create(C) {
             return function create() {
-                return singleton(C) || C.apply(Object.create(C[PROTO]), arguments);
+                return singleton(C) || C.apply(Object.create(C.prototype), arguments);
             };
         }
         function ctor(m, s, name, P) {
@@ -866,12 +866,12 @@
             return Ctor.mimic(m, name);
         }
         function extend(C, Sup) {
-            if (!(SUPER in C[PROTO])) {
-                var p = C[PROTO], sp = Sup[PROTO];
+            if (!("__super" in C.prototype)) {
+                var p = C.prototype, sp = Sup.prototype;
                 Object.keys(sp).forEach(function(k) {
                     if (k in reserved) return;
                     switch (n8iv.type(sp[k])) {
-                      case FN:
+                      case "function":
                         p[k] = !n8iv.isFn(p[k]) ? wrap(sp[k], n8iv.noop, k) : wrap(p[k], sp[k], k);
                         break;
                       default:
@@ -882,10 +882,10 @@
                     !(n8iv.isFn(p[k]) && (!(k in sp) || p[k].valueOf() !== sp[k].valueOf())) || (p[k] = wrap(p[k], n8iv.noop, k));
                 });
                 sp = n8iv.describe({
-                    value : Object.create(Sup[PROTO])
-                }, r);
-                n8iv.def(C, SUPER, sp);
-                n8iv.def(C[PROTO], SUPER, sp);
+                    value : Object.create(Sup.prototype)
+                }, "r");
+                n8iv.def(C, "__super", sp);
+                n8iv.def(C.prototype, "__super", sp);
             }
             return C;
         }
@@ -894,17 +894,17 @@
         }
         function is(o, C) {
             if (o instanceof C) return T;
-            if (!(o = o[CTOR])) return F;
+            if (!(o = o.constructor)) return F;
             do {
                 if (o === C) return T;
-            } while (o[SUPER] && (o = o[SUPER][CTOR]));
+            } while (o.__super && (o = o.__super.constructor));
             return F;
         }
         function register(C, path, type) {
             var err_msg = path + ERR_MSG, msg = [];
             !path || !(path in reg_path) || msg.push(err_msg + "Class");
             !type || !(type in reg_type) || msg.push(err_msg + "Type");
-            if (msg[LEN]) {
+            if (msg.length) {
                 n8iv.trace();
                 msg.forEach(n8iv.error);
                 n8iv.error(new Error("n8iv.Class overwrite error."), T);
@@ -915,32 +915,32 @@
             return !C ? N : C.singleton || N;
         }
         function type(c) {
-            var ctor = c[CTOR], k;
+            var ctor = c.constructor, k;
             for (k in reg_path) if (reg_path[k] === ctor) return k;
             return N;
         }
         function wrap(m, s, name) {
             return function() {
-                var o, p = n8iv.description(this, PARENT) || desc_noop;
+                var o, p = n8iv.description(this, "parent") || desc_noop;
                 p.writable = T;
-                n8iv.def(this, PARENT, s ? n8iv.describe(s, cw) : desc_noop, T);
+                n8iv.def(this, "parent", s ? n8iv.describe(s, "cw") : desc_noop, T);
                 o = m.apply(this, arguments);
-                n8iv.def(this, PARENT, p, T);
+                n8iv.def(this, "parent", p, T);
                 return this.chain !== F && o === U ? this : o;
             }.mimic(m, name);
         }
-        var ERR_MSG = " already exists. Cannot override existing ", PARENT = "parent", SUPER = "__super", defaults = (CTOR + " extend mixin module singleton type").split(" "), desc_noop = n8iv.describe(n8iv.noop, cw), dumb = n8iv.obj(), re_dot = /\./g, re_root = /^\u005E/, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
-        reserved[CTOR] = reserved[PARENT] = reserved[SUPER] = reserved[TYPE] = T;
-        n8iv.def(Class, "is", n8iv.describe(is, r)).def(Class, "type", n8iv.describe(type, r)).def(n8iv, "Class", n8iv.describe(Class, r)).def(n8iv, "create", n8iv.describe(function(n) {
+        var ERR_MSG = " already exists. Cannot override existing ", defaults = "constructor extend mixin module singleton type".split(" "), desc_noop = n8iv.describe(n8iv.noop, "cw"), dumb = n8iv.obj(), re_dot = /\./g, re_root = /^\u005E/, reg_path = n8iv.obj(), reg_type = n8iv.obj(), reserved = n8iv.obj();
+        reserved.constructor = reserved.parent = reserved.__super = reserved.__type__ = T;
+        n8iv.def(Class, "is", n8iv.describe(is, "r")).def(Class, "type", n8iv.describe(type, "r")).def(n8iv, "Class", n8iv.describe(Class, "r")).def(n8iv, "create", n8iv.describe(function(n) {
             var C = reg_type[n] || reg_type["n8iv_" + n] || reg_path[n], args = Array.from(arguments, 1);
             C || n8iv.trace().error(new Error(n + " does not match any registered n8iv.Classes."), T);
             return C.create.apply(n8iv.global, args);
-        }, r));
+        }, "r"));
     }();
     n8iv.Class("n8iv.Callback", function() {
-        n8iv.def(Function[PROTO], "callback", n8iv.describe(function(conf) {
+        n8iv.def(Function.prototype, "callback", n8iv.describe(function(conf) {
             return (new n8iv.Callback(this, conf)).fire.mimic(this);
-        }, r));
+        }, "r"));
         function buffer() {
             if (bid in this) return this;
             this[bid] = setTimeout(buffer_stop.bind(this), this.buffer);
@@ -953,11 +953,11 @@
         function handleEvent() {
             return this.fire.apply(this, arguments);
         }
-        var bid = "bufferId", he = "handleEvent";
+        var bid = "bufferId", he = "handleEvent", tid = "timeoutId";
         return {
             constructor : function Callback(fn, conf) {
                 n8iv.copy(this, conf || n8iv.obj());
-                var desc = n8iv.describe(N, r), fire = (n8iv.isNum(this.buffer) ? buffer : this.exec).bind(this);
+                var desc = n8iv.describe(N, "r"), fire = (n8iv.isNum(this.buffer) ? buffer : this.exec).bind(this);
                 desc.value = fn;
                 n8iv.def(this, "fn", desc);
                 desc.value = this;
@@ -986,14 +986,19 @@
             exec : function() {
                 if (this.disabled) return;
                 this.times === 0 || this.times > ++this.count || this.disable();
-                var a = Array.from(arguments), ctx = this.ctx, ms = this.delay, t = n8iv.type(a[0]), v;
-                t && (t.endsWith("event") || t == "n8iv_observer") ? a.splice.apply(a, [ 1, 0 ].concat(this.args)) : a.unshift.apply(a, this.args);
-                ms === N ? v = this.fn.apply(ctx, a) : this.fn.delay.apply(this.fn, [ ms, ctx ].concat(a));
+                var a = Array.from(arguments), me = this, ctx = me.ctx, ms = me.delay, t = n8iv.type(a[0]), v;
+                t && (t.endsWith("event") || t == "n8iv_observer") ? a.splice.apply(a, [ 1, 0 ].concat(me.args)) : a.unshift.apply(a, me.args);
+                ms === N ? v = me.fn.apply(ctx, a) : this[tid] = setTimeout(function() {
+                    me.fn.apply(ctx, a);
+                }, ms);
                 return v;
             },
             reset : function() {
                 this.count = 0;
                 buffer_stop.call(this.enable());
+            },
+            stop : function() {
+                !(tid in this) || clearTimeout(this[tid]), delete this[tid];
             }
         };
     }());
@@ -1001,7 +1006,7 @@
         var ID = "__hashid__", cache = [];
         return {
             constructor : function Hash(o) {
-                n8iv.def(this, ID, n8iv.describe(cache.push(n8iv.obj()) - 1, r));
+                n8iv.def(this, ID, n8iv.describe(cache.push(n8iv.obj()) - 1, "r"));
                 !n8iv.isObj(o) || this.set(o);
             },
             keys : {
@@ -1011,7 +1016,7 @@
             },
             length : {
                 get : function() {
-                    return this.keys[LEN];
+                    return this.keys.length;
                 }
             },
             values : {
@@ -1060,8 +1065,8 @@
             },
             set : function(o, v) {
                 switch (n8iv.type(o)) {
-                  case OBJ:
-                  case NOBJ:
+                  case "object":
+                  case "nullobject":
                     Object.keys(o).forEach(function(k) {
                         this.set(k, o[k]);
                     }, this);
@@ -1091,25 +1096,25 @@
                 o = !n8iv.isUndef(l[_options]) ? l[_options] : opt;
                 s = !n8iv.isUndef(l[_ctx]) ? l[_ctx] : ctx;
                 switch (n8iv.type(l)) {
-                  case FN:
+                  case "function":
                     this.on(k, l, ctx, opt);
                     break;
-                  case OBJ:
-                  case NOBJ:
+                  case "object":
+                  case "nullobject":
                     switch (n8iv.type(l[_fn])) {
-                      case FN:
-                      case OBJ:
-                      case NOBJ:
+                      case "function":
+                      case "object":
+                      case "nullobject":
                         this.on(k, l[_fn], s, o);
                         break;
-                      case ARR:
+                      case "array":
                         l[_fn].forEach(function(fn) {
                             this.on(k, fn, s, o);
                         }, this);
                         break;
                     }
                     break;
-                  case ARR:
+                  case "array":
                     l.forEach(function(fn) {
                         this.on(k, fn, ctx, opt);
                     }, this);
@@ -1181,7 +1186,7 @@
             var cb, e = this[_observers], fnt, q;
             if (n8iv.isObj(event)) return addObservers.call(this, event);
             switch (fnt = n8iv.nativeType(fn)) {
-              case ARR:
+              case "array":
                 cb = n8iv.obj();
                 cb[event] = {
                     fn : fn,
@@ -1189,8 +1194,8 @@
                     ctx : ctx
                 };
                 return addObservers.call(this, cb);
-              case OBJ:
-              case NOBJ:
+              case "object":
+              case "nullobject":
               case "n8iv_callback":
                 if ("handleEvent" in fn) {
                     !(n8iv.isObj(ctx) && n8iv.isUndef(o)) || (o = ctx);
@@ -1215,8 +1220,8 @@
                     delay : o
                 };
                 break;
-              case OBJ:
-              case NOBJ:
+              case "object":
+              case "nullobject":
                 o = Object.clone(o);
                 break;
               default:
@@ -1252,9 +1257,9 @@
                 !n8iv.isObj(this.observers) || this.on(this.observers), delete this.observers;
             },
             broadcast : function(event) {
-                if (this[_destroyed] || this[_suspended] || !this[_observers][LEN] || !event || !this[_observers].has(event = event.lc())) return;
-                var args = Array.from(arguments, 1), e = this[_observers].get(event).clone();
-                if (!e[LEN]) return;
+                if (this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has(event = event.lc())) return;
+                var args = Array.from(arguments, 1), e = this[_observers].get(event).slice();
+                if (!e.length) return;
                 this[_broadcasting] = event;
                 e.every(broadcast, {
                     args : args,
