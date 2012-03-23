@@ -29,4 +29,4 @@
 
 	function reduce( o, fn, val ) { return Object.keys( o ).reduce( function( res, k, i ) { return fn.call( o, res, o[k], k, o, i ); }, val ); }
 
-	n8iv.defs( Object, { aggregate : aggregate, clear : clear, equalTo : equalTo, ownKeys : ownKeys, ownLen : ownLen, reduce : reduce }, 'r' );
+	n8iv.defs( Object, { aggregate : aggregate, clear : clear, equalTo : equalTo, ownKeys : ownKeys, ownLen : ownLen, reduce : reduce }, 'w' );

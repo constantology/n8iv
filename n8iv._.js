@@ -1,4 +1,5 @@
 (function(root) {
+    typeof root != "undefined" || (root = _root);
     function $A(a, i, j) {
         return got(a, "length") ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a.length) : [ a ];
     }
@@ -213,7 +214,7 @@
     def(OP, "__type__", copy({
         get : __type__
     }, modes.r));
-    def(Array, "from", describe($A, "r"));
+    def(Array, "from", describe($A, "w"));
     defs(Object, {
         clone : function(o) {
             return copy(n8iv_obj(), o);
@@ -255,13 +256,13 @@
                 return o[k];
             });
         }
-    }, "r");
+    }, "w");
     def(Array.prototype, "find", describe(function(fn, ctx) {
         var i = -1, l = this.length >>> 0;
         ctx || (ctx = this);
         while (++i < l) if (!!fn.call(ctx, this[i], i, this)) return this[i];
         return N;
-    }, "r"));
+    }, "w"));
     defs(Function.prototype, {
         n8ivName : {
             get : function() {
@@ -293,7 +294,7 @@
                 }, "c")
             });
         }
-    }, "r");
+    }, "w");
     defs(String.prototype, {
         endsWith : function(s) {
             return this.length && this.lastIndexOf(s) == this.length - s.length;
@@ -304,11 +305,11 @@
         startsWith : function(s) {
             return !this.indexOf(s);
         }
-    }, "r");
+    }, "w");
     typeof global == "undefined" || (root = global);
     ENV != CJS ? def(root, "n8iv", describe({
         value : n8iv
-    }, "r")) : module.exports = n8iv;
+    }, "w")) : module.exports = n8iv;
     defs(n8iv, {
         ENV : ENV,
         modes : modes,
@@ -345,6 +346,6 @@
         trace : trace,
         type : n8iv_type,
         valof : valof
-    }, "r");
+    }, "w");
     return n8iv;
 })(this);

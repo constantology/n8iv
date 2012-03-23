@@ -1,4 +1,5 @@
 ( function( root ) {
+	( typeof root != 'undefined' ) || ( root = _root );
 // utils
 	function $A( a, i, j ) { return got( a, 'length' ) ? slice.call( a, ( isNum( i ) ? i > 0 ? i : 0 : 0 ), ( isNum( j ) ? j > i ? j : i + 1 : a.length ) ) : [a]; }
 
@@ -167,7 +168,7 @@
 **/
 	def( OP, '__type__', copy( { get : __type__ }, modes.r ) );
 
-	def( Array, 'from', describe( $A, 'r' ) );
+	def( Array, 'from', describe( $A, 'w' ) );
 
 	defs( Object, {
 		clone  : function ( o ) { return copy( n8iv_obj(), o ); },
@@ -197,13 +198,13 @@
 			return isEmpty( o ) ? U : !isEmpty( o[k] ) ? o[k] : isFn( o.get ) ? o.get( k ) : isFn( o.getAttribute ) ? o.getAttribute( k ) : U;
 		},
 		values : function( o ) { return Object.keys( o ).map( function( k ) { return o[k]; } ); }
-	}, 'r' );
+	}, 'w' );
 
 	def( Array.prototype, 'find', describe( function( fn, ctx ) {
 		var i = -1, l = this.length >>> 0; ctx || ( ctx = this );
 		while ( ++i < l ) if ( !!fn.call( ctx, this[i], i, this ) ) return this[i];
 		return N;
-	}, 'r' ) );
+	}, 'w' ) );
 
 	defs( Function.prototype, {
 // properties
@@ -240,18 +241,18 @@
 				valueOf     : describe( function() { return fn; }, 'c' )
 			} );
 		}
-	}, 'r' );
+	}, 'w' );
 
 	defs( String.prototype, {
 		endsWith   : function( s ) { return this.length && this.lastIndexOf( s ) == ( this.length - s.length ); },
 		lc         : function()    { return lc( this ); },
 		startsWith : function( s ) { return !this.indexOf( s ); }
-	}, 'r' );
+	}, 'w' );
 
 // if ENV === commonjs we want root to be global and we want to do it down here so we don't break anything up there
 	typeof global == 'undefined' || ( root = global );
 // expose n8iv: JavaScript Natives are exposed by default, as such we do not need to worry about adding them to module.exports
-	ENV != CJS ? def( root, 'n8iv', describe( { value : n8iv }, 'r' ) ) : ( module.exports = n8iv );
+	ENV != CJS ? def( root, 'n8iv', describe( { value : n8iv }, 'w' ) ) : ( module.exports = n8iv );
 
 	defs( n8iv, {
 	// properties
@@ -263,7 +264,7 @@
 		isFn       : isFn,       isNum    : isNum,    isObj       : isObj,       isStr  : isStr,      isUndef : isUndef,
 		nativeType : nativeType, noop     : noop,     obj         : n8iv_obj,    proto  : n8iv_proto, range   : range,
 		requite    : requite,    tostr    : tostr,    trace       : trace,       type   : n8iv_type,  valof   : valof
-	}, 'r' );
+	}, 'w' );
 
 	return n8iv;
 

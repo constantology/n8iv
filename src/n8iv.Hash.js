@@ -3,7 +3,7 @@ n8iv.Class( 'n8iv.Hash', function() {
 
 	return {
 		constructor : function Hash( o ) {
-			n8iv.def( this, ID, n8iv.describe( cache.push( n8iv.obj() ) - 1, 'r' ) );
+			n8iv.def( this, ID, n8iv.describe( cache.push( n8iv.obj() ) - 1, 'w' ) );
 			!n8iv.isObj( o ) || this.set( o );
 		},
 

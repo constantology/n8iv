@@ -89,4 +89,4 @@ n8iv.defs( String.prototype, function() {
 		uc           : function() { return this.toUpperCase(); },
 		underscore   : function() { return splitString( this ).join( '_' ).lc(); }
 	};
-}(), 'r' );
+}(), 'w' );

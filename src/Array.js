@@ -15,7 +15,7 @@ n8iv.defs( Array.prototype, function() {
 	sort[String(  T )] = sort[1] = sort.asc;
 	sort[String( !1 )] = sort[0] = sort.desc;
 
-	n8iv.def( Array, 'sortFns', n8iv.describe( { value : sort }, 'r' ) );
+	n8iv.def( Array, 'sortFns', n8iv.describe( { value : sort }, 'w' ) );
 
 	return {
 		aggregate : function( val, fn, ctx ) { return AP.reduce.call( this, function( val, o, i, a ) { return fn.call( ctx || o, val, o, i, a ); }, val ); },
@@ -114,4 +114,4 @@ n8iv.defs( Array.prototype, function() {
 			return AP.map.call( this, function( o, i ) { return args.pluck( i ); } );
 		}
 	};
-}(), 'r' );
+}(), 'w' );

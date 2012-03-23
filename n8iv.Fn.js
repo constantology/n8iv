@@ -1,5 +1,6 @@
 !function(n8iv) {
-    var F = !1, N = null, T = !0;
+    "use strict";
+    var F = !1, N = null, T = !0, U;
     function aggregate(o, val, fn, ctx) {
         ctx || (ctx = o);
         return Object.keys(o).reduce(function(res, k, i) {
@@ -51,14 +52,14 @@
         ownKeys : ownKeys,
         ownLen : ownLen,
         reduce : reduce
-    }, "r");
+    }, "w");
     n8iv.defs(Function.prototype, function() {
         var re_args = /^[\s\(]*function[^\(]*\(([^\)]*)\)/, re_split = /\s*,\s*/;
         n8iv.def(Function, "from", n8iv.describe(function from(o) {
             return n8iv.isFn(o) ? o : function() {
                 return o;
             };
-        }, "r"));
+        }, "w"));
         return {
             params : {
                 get : function() {
@@ -80,7 +81,7 @@
                 var baked = "baked", fn = this;
                 return fn[baked] || !n8iv.def(fn, baked, n8iv.describe(function() {
                     return fn.apply(this, [ this ].concat(Array.from(arguments)));
-                }.mimic(fn), "r")) || fn[baked];
+                }.mimic(fn), "w")) || fn[baked];
             },
             defer : n8iv.ENV == "commonjs" ? function(ctx) {
                 return process.nextTick(this.bind.apply(this, [ ctx ].concat(Array.from(arguments, 1))));
@@ -127,7 +128,7 @@
                 }.mimic(wrapper);
             }
         };
-    }(), "r");
+    }(), "w");
     n8iv.defs(Array.prototype, function() {
         function groupByFn(field, v) {
             return field(v) ? 0 : 1;
@@ -159,7 +160,7 @@
         sort[String(!1)] = sort[0] = sort.desc;
         n8iv.def(Array, "sortFns", n8iv.describe({
             value : sort
-        }, "r"));
+        }, "w"));
         return {
             aggregate : function(val, fn, ctx) {
                 return AP.reduce.call(this, function(val, o, i, a) {
@@ -302,7 +303,7 @@
                 });
             }
         };
-    }(), "r");
+    }(), "w");
     n8iv.defs(Number, function() {
         var abs = Math.abs, big_int = 9007199254740992, floor = Math.floor;
         return {
@@ -329,7 +330,7 @@
         toHex : function() {
             return this.pad(2, 16);
         }
-    }, "r");
+    }, "w");
     n8iv.defs(String.prototype, function() {
         var cache_chars = n8iv.obj(), cache_slices = n8iv.obj(), esc_chars = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g, esc_val = "\\$1", re_caps = /([A-Z])/g, re_gsub = /\$?\{([^\}]+)\}/g, re_hex = /#?(\w{1,6})/, re_rgb = /(\d{1,3})/g, re_split_string = /[\sA-Z_-]+/g;
         function _splitString(m, p) {
@@ -455,6 +456,6 @@
                 return splitString(this).join("_").lc();
             }
         };
-    }(), "r");
+    }(), "w");
     n8iv.ENV != "commonjs" || module.exports === n8iv || (module.exports = n8iv);
-}(typeof n8iv != "undefined" ? n8iv : typeof require != "undefined" ? require("./n8iv._") : N);
+}(typeof n8iv != "undefined" ? n8iv : typeof require != "undefined" ? require("./n8iv._") : null);

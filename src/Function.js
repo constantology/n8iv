@@ -2,7 +2,7 @@ n8iv.defs( Function.prototype, function() {
 	var re_args  = /^[\s\(]*function[^\(]*\(([^\)]*)\)/,
 		re_split = /\s*,\s*/;
 
-	n8iv.def( Function, 'from', n8iv.describe( function from( o ) { return n8iv.isFn( o ) ? o : function() { return o; }; }, 'r' ) );
+	n8iv.def( Function, 'from', n8iv.describe( function from( o ) { return n8iv.isFn( o ) ? o : function() { return o; }; }, 'w' ) );
 
 	return {
 // properties
@@ -20,7 +20,7 @@ n8iv.defs( Function.prototype, function() {
 		},
 		bake      : function() {
 			var baked = 'baked', fn = this;
-			return fn[baked] || !n8iv.def( fn, baked, n8iv.describe( function() { return fn.apply( this, [this].concat( Array.from( arguments ) ) ); }.mimic( fn ), 'r' ) ) || fn[baked];
+			return fn[baked] || !n8iv.def( fn, baked, n8iv.describe( function() { return fn.apply( this, [this].concat( Array.from( arguments ) ) ); }.mimic( fn ), 'w' ) ) || fn[baked];
 		},
 		defer     : n8iv.ENV == 'commonjs'
 				  ? function( ctx ) { return process.nextTick( this.bind.apply( this, [ctx].concat( Array.from( arguments, 1 ) ) ) ); }
@@ -57,4 +57,4 @@ n8iv.defs( Function.prototype, function() {
 			}.mimic( wrapper );
 		}
 	};
-}(), 'r' );
+}(), 'w' );

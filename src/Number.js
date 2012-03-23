@@ -23,4 +23,4 @@ n8iv.defs( Number.prototype, {
 		return this;
 	},
 	toHex : function() { return this.pad( 2, 16 ); }
-}, 'r' );
+}, 'w' );

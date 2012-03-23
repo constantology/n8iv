@@ -1,5 +1,5 @@
 n8iv.Class( 'n8iv.Callback', function() {
-	n8iv.def( Function.prototype, 'callback', n8iv.describe( function( conf ) { return ( new n8iv.Callback( this, conf ) ).fire.mimic( this ); }, 'r' ) );
+	n8iv.def( Function.prototype, 'callback', n8iv.describe( function( conf ) { return ( new n8iv.Callback( this, conf ) ).fire.mimic( this ); }, 'w' ) );
 
 	function buffer() {
 		if ( bid in this ) return this;
@@ -15,7 +15,7 @@ n8iv.Class( 'n8iv.Callback', function() {
 		constructor : function Callback( fn, conf ) {
 			n8iv.copy( this, conf || n8iv.obj() );
 
-			var desc = n8iv.describe( N, 'r' ),
+			var desc = n8iv.describe( N, 'w' ),
 				fire = ( n8iv.isNum( this.buffer ) ? buffer : this.exec ).bind( this );
 
 			desc.value = fn;   n8iv.def( this, 'fn',   desc );

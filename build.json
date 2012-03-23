@@ -5,6 +5,6 @@
 	"out"       : { "dir" : "./", "file" : "n8iv", "min" : "n8iv.min" },
 	"src" : {
 		"dir"   : "./src",
-		"files" : [".begin.all", "n8iv._", "n8iv.Fn", "Object", "Function", "Array", "Number", "String", "n8iv.Oo", "n8iv.Class", "n8iv.Callback", "n8iv.Hash", "n8iv.Observer", ".end.all"]
+		"files" : [".begin.all", "n8iv._", ".begin", "Object", "Function", "Array", "Number", "String", ".end", ".begin", "n8iv.Class", "n8iv.Callback", "n8iv.Hash", "n8iv.Observer", ".end", ".end.all"]
 	}
 }
