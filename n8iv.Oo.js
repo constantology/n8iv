@@ -85,7 +85,7 @@
             return C;
         }
         function getType(type) {
-            return type.replace(re_root, "").replace(re_dot, "_").lc();
+            return type.replace(re_root, "").replace(re_dot, "_").toLowerCase();
         }
         function is(o, C) {
             if (o && C) {
@@ -351,7 +351,7 @@
             }.mimic(cb.fire);
         }
         function ignore(event, fn, ctx) {
-            event = event.lc();
+            event = event.toLowerCase();
             var e = this[_observers].get(event), i, o;
             if (!e) {
                 return;
@@ -404,7 +404,7 @@
                 !ctx || (fn = ctx[fn]);
                 break;
             }
-            event = event.lc();
+            event = event.toLowerCase();
             (q = e.get(event)) || e.set(event, q = []);
             switch (n8iv.type(o)) {
               case "boolean":
@@ -454,7 +454,7 @@
                 !n8iv.isObj(this.observers) || this.on(this.observers), delete this.observers;
             },
             broadcast : function(event) {
-                if (this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has(event = event.lc())) return;
+                if (this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has(event = event.toLowerCase())) return;
                 var args = Array.from(arguments, 1), e = this[_observers].get(event).slice();
                 if (!e.length) return;
                 this[_broadcasting] = event;
@@ -498,7 +498,7 @@
                     e.clear();
                     return;
                 }
-                event = event.lc();
+                event = event.toLowerCase();
                 !e.has(event) || e.set(event, []);
             },
             relayEvents : function(o) {

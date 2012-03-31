@@ -35,12 +35,12 @@ n8iv.defs( String.prototype, function() {
 			character = cache_chars[character] || ( cache_chars[character] = { re : new RegExp( '(' + character + '){1,}', 'g' ), fill : character } );
 			return this.split( character.re ).filter( function( s ) { return !s.blank() && s != character.fill; } ).join( character.fill );
 		},
-		contains     : function( s ) { return !!~this.indexOf( s ); },
 		empty        : function() { return String( this ) === ''; },
 		format       : function() { return this.gsub.call( this, Array.from( arguments ) ); },
 		gsub         : function( o, pattern ) { return this.replace( ( pattern || re_gsub ), function( m, p ) { return o[p] || ''; } ); },
 		hyphenate    : function() { return splitString( this ).join( '-' ).lc(); },
 		includes     : function( s ) { return this.lc().contains( String( s ).lc() ); },
+		lc           : function() { return this.toLowerCase(); },
 		parts        : function( re ) {
 			var m = Array.from( this.match( re ) );
 			switch ( m.length ) {

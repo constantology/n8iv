@@ -1,4 +1,5 @@
 (function(root) {
+    "use strict";
     typeof root != "undefined" || (root = _root);
     function $A(a, i, j) {
         return got(a, "length") ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a.length) : [ a ];
@@ -178,7 +179,7 @@
     function isUndef(o) {
         return typeof o == "undefined";
     }
-    var F = !1, N = null, T = !0, U, CJS = "commonjs", ENV = typeof module != "undefined" && "exports" in module ? CJS : typeof navigator != "undefined" ? "browser" : "other", OP = Object.prototype, Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
+    var CJS = "commonjs", ENV = typeof module != "undefined" && "exports" in module ? CJS : typeof navigator != "undefined" ? "browser" : "other", F = !1, N = null, OP = Object.prototype, T = !0, U, Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
         o[String(v)] = v;
         return o;
     }, n8iv_obj()), id_count = 999, id_prefix = "anon__", modes = function() {
@@ -214,7 +215,6 @@
     def(OP, "__type__", copy({
         get : __type__
     }, modes.r));
-    def(Array, "from", describe($A, "w"));
     defs(Object, {
         clone : function(o) {
             return copy(n8iv_obj(), o);
@@ -257,6 +257,7 @@
             });
         }
     }, "w");
+    def(Array, "from", describe($A, "w"));
     def(Array.prototype, "find", describe(function(fn, ctx) {
         var i = -1, l = this.length >>> 0;
         ctx || (ctx = this);
@@ -296,11 +297,11 @@
         }
     }, "w");
     defs(String.prototype, {
+        contains : function(s) {
+            return !!~this.indexOf(s);
+        },
         endsWith : function(s) {
             return this.length && this.lastIndexOf(s) == this.length - s.length;
-        },
-        lc : function() {
-            return lc(this);
         },
         startsWith : function(s) {
             return !this.indexOf(s);

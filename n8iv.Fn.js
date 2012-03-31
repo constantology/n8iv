@@ -362,9 +362,6 @@
                     return !s.blank() && s != character.fill;
                 }).join(character.fill);
             },
-            contains : function(s) {
-                return !!~this.indexOf(s);
-            },
             empty : function() {
                 return String(this) === "";
             },
@@ -381,6 +378,9 @@
             },
             includes : function(s) {
                 return this.lc().contains(String(s).lc());
+            },
+            lc : function() {
+                return this.toLowerCase();
             },
             parts : function(re) {
                 var m = Array.from(this.match(re));

@@ -65,7 +65,7 @@ n8iv.Class( 'n8iv.Observer', function() {
 	function handleEvent( cb ) { return function handleEvent() { return cb.handleEvent.apply( cb, arguments ); }.mimic( cb.fire ); }
 
 	function ignore( event, fn, ctx ) {
-		event = event.lc();
+		event = event.toLowerCase();
 		var e = this[_observers].get( event ), i, o;
 
 		if ( !e ) { return; }
@@ -99,7 +99,7 @@ n8iv.Class( 'n8iv.Observer', function() {
 			case 'string' : !ctx || ( fn = ctx[fn] ); break;
 		}
 
-		event = event.lc();
+		event = event.toLowerCase();
 		( q = e.get( event ) ) || e.set( event, ( q = [] ) );
 
 		switch( n8iv.type( o ) ) {
@@ -137,7 +137,7 @@ n8iv.Class( 'n8iv.Observer', function() {
 
 // public methods
 		broadcast      : function( event ) {
-			if ( this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has( event = event.lc() ) ) return;
+			if ( this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has( event = event.toLowerCase() ) ) return;
 
 			var args = Array.from( arguments, 1 ),
 				e    = this[_observers].get( event ).slice(); // so we can add/ remove observers while this event is firing without disrupting the queue;
@@ -179,7 +179,7 @@ n8iv.Class( 'n8iv.Observer', function() {
 		purgeObservers : function( event ) {
 			var e = this[_observers];
 			if ( !event ) { e.clear(); return; }
-			event = event.lc();
+			event = event.toLowerCase();
 			!e.has( event ) || e.set( event, [] );
 		},
 		relayEvents    : function( o ) {

@@ -94,7 +94,7 @@
 		return C;
 	}
 
-	function getType( type ) { return type.replace( re_root, '' ).replace( re_dot, '_' ).lc(); }
+	function getType( type ) { return type.replace( re_root, '' ).replace( re_dot, '_' ).toLowerCase(); }
 
 	function is( o, C ) {
 		if ( o && C ) {

@@ -30,10 +30,10 @@ This is an, as yet, untested framework, use at your own risk!
 		<tr><td>n8iv._.min.js</td><td>2.6kb</td><td>uglified + deflate</td>
 		<tr><td>n8iv.Fn.js</td><td>4.0kb</td><td>deflate</td>
 		<tr><td>n8iv.Fn.min.js</td><td>3.1kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.Oo.js</td><td>4.4kb</td><td>deflate</td>
-		<tr><td>n8iv.Oo.min.js</td><td>3.3kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.js</td><td>10.9kb</td><td>deflate</td>
-		<tr><td>n8iv.min.js</td><td>8.1kb</td><td>uglified + deflate</td>
+		<tr><td>n8iv.Oo.js</td><td>4.5kb</td><td>deflate</td>
+		<tr><td>n8iv.Oo.min.js</td><td>3.4kb</td><td>uglified + deflate</td>
+		<tr><td>n8iv.js</td><td>11.2kb</td><td>deflate</td>
+		<tr><td>n8iv.min.js</td><td>8.2kb</td><td>uglified + deflate</td>
 	</tbody>
 </table>
 

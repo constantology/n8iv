@@ -1,6 +1,7 @@
 !function(_root) {
     "use strict";
     var n8iv = function(root) {
+        "use strict";
         typeof root != "undefined" || (root = _root);
         function $A(a, i, j) {
             return got(a, "length") ? slice.call(a, isNum(i) ? i > 0 ? i : 0 : 0, isNum(j) ? j > i ? j : i + 1 : a.length) : [ a ];
@@ -180,7 +181,7 @@
         function isUndef(o) {
             return typeof o == "undefined";
         }
-        var F = !1, N = null, T = !0, U, CJS = "commonjs", ENV = typeof module != "undefined" && "exports" in module ? CJS : typeof navigator != "undefined" ? "browser" : "other", OP = Object.prototype, Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
+        var CJS = "commonjs", ENV = typeof module != "undefined" && "exports" in module ? CJS : typeof navigator != "undefined" ? "browser" : "other", F = !1, N = null, OP = Object.prototype, T = !0, U, Module = ENV != CJS ? N : require("module"), booleans = [ 0, F, "", NaN, N, U ].map(String), coercions = [ F, NaN, N, T, U ].reduce(function(o, v) {
             o[String(v)] = v;
             return o;
         }, n8iv_obj()), id_count = 999, id_prefix = "anon__", modes = function() {
@@ -216,7 +217,6 @@
         def(OP, "__type__", copy({
             get : __type__
         }, modes.r));
-        def(Array, "from", describe($A, "w"));
         defs(Object, {
             clone : function(o) {
                 return copy(n8iv_obj(), o);
@@ -259,6 +259,7 @@
                 });
             }
         }, "w");
+        def(Array, "from", describe($A, "w"));
         def(Array.prototype, "find", describe(function(fn, ctx) {
             var i = -1, l = this.length >>> 0;
             ctx || (ctx = this);
@@ -298,11 +299,11 @@
             }
         }, "w");
         defs(String.prototype, {
+            contains : function(s) {
+                return !!~this.indexOf(s);
+            },
             endsWith : function(s) {
                 return this.length && this.lastIndexOf(s) == this.length - s.length;
-            },
-            lc : function() {
-                return lc(this);
             },
             startsWith : function(s) {
                 return !this.indexOf(s);
@@ -715,9 +716,6 @@
                         return !s.blank() && s != character.fill;
                     }).join(character.fill);
                 },
-                contains : function(s) {
-                    return !!~this.indexOf(s);
-                },
                 empty : function() {
                     return String(this) === "";
                 },
@@ -734,6 +732,9 @@
                 },
                 includes : function(s) {
                     return this.lc().contains(String(s).lc());
+                },
+                lc : function() {
+                    return this.toLowerCase();
                 },
                 parts : function(re) {
                     var m = Array.from(this.match(re));
@@ -899,7 +900,7 @@
                 return C;
             }
             function getType(type) {
-                return type.replace(re_root, "").replace(re_dot, "_").lc();
+                return type.replace(re_root, "").replace(re_dot, "_").toLowerCase();
             }
             function is(o, C) {
                 if (o && C) {
@@ -1165,7 +1166,7 @@
                 }.mimic(cb.fire);
             }
             function ignore(event, fn, ctx) {
-                event = event.lc();
+                event = event.toLowerCase();
                 var e = this[_observers].get(event), i, o;
                 if (!e) {
                     return;
@@ -1218,7 +1219,7 @@
                     !ctx || (fn = ctx[fn]);
                     break;
                 }
-                event = event.lc();
+                event = event.toLowerCase();
                 (q = e.get(event)) || e.set(event, q = []);
                 switch (n8iv.type(o)) {
                   case "boolean":
@@ -1268,7 +1269,7 @@
                     !n8iv.isObj(this.observers) || this.on(this.observers), delete this.observers;
                 },
                 broadcast : function(event) {
-                    if (this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has(event = event.lc())) return;
+                    if (this[_destroyed] || this[_suspended] || !this[_observers].length || !event || !this[_observers].has(event = event.toLowerCase())) return;
                     var args = Array.from(arguments, 1), e = this[_observers].get(event).slice();
                     if (!e.length) return;
                     this[_broadcasting] = event;
@@ -1312,7 +1313,7 @@
                         e.clear();
                         return;
                     }
-                    event = event.lc();
+                    event = event.toLowerCase();
                     !e.has(event) || e.set(event, []);
                 },
                 relayEvents : function(o) {

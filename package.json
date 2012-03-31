@@ -21,5 +21,5 @@
 		"type"        : "git",
 		"url"         : "git@github.com:constantology/n8iv.git"
 	},
-	"version"         : "0.1.1"
+	"version"         : "0.1.2"
 }
