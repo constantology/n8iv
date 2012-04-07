@@ -408,7 +408,7 @@ Creates an empty Object using `Object.create( null )`, the Object has no constru
 Optionally pass an Object whose properties you want copied to the empty Object instance.
 
 ### proto( item:Mixed ):Mixed
-Shortened version of [Object.getOwnPropertyDescriptor](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/getPrototypeOf).
+Shortened version of [Object.getPrototypeOf](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/getPrototypeOf).
 
 ### tostr( item:Mixed ):String
 Shortened version of `Object.prototype.toString.call`.
