@@ -182,8 +182,7 @@ When `value` is an Object `n8iv.describe` assumes you are passing it a property 
        configurable : true,
        enumerable   : false,
        get          : function() { ... },
-       set          : function() { ... },
-       writeable    : true
+       set          : function() { ... }
    } */
 
 ```
