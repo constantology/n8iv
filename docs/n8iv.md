@@ -96,20 +96,71 @@ Copies the properties – accessible via `Object.keys` – from the `source` Obj
 
 ```
 
-### def( item:Mixed, name:String, config:Object[, overwrite:Boolean, debug:Boolean]] ):n8iv
+### def( item:Mixed, name:String, descriptor:Object[, overwrite:Boolean, debug:Boolean]] ):n8iv
 Shortened version of [Object.defineProperty](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/defineProperty) with some extra options.
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>item</td><td>The item to define a property on.</td></tr>
 	<tr><td>name</td><td>The name of the property you are defining.</td></tr>
-	<tr><td>config</td><td>The property descriptor for the new/ modified property.</td></tr>
+	<tr><td>descriptor</td><td>The property descriptor for the new/ modified property.</td></tr>
 	<tr><td>overwrite</td><td>Whether or not to attempt overwriting the new property if it exists.</td></tr>
 	<tr><td>debug</td><td>Whether or not to throw an error if the property already exists.</td></tr>
 </table>
 
-The last two – optional – parameters are handy for extending JavaScript Natives without risking collisions with native implementations.
+The last two – optional – parameters are handy for extending JavaScript Natives without risking collisions with native/ other implementations.
 
-`n8iv.addAccessor` & `n8iv.addMethod` both call `n8iv.def` internally.
+#### Example:
+
+```javascript
+
+   n8iv.def( Object, 'greet', n8iv.describe( function( name ) { return 'Hello ' + name + '!'; }, 'w' ) );
+
+   Object.greet( 'world' ); // returns => "Hello world!"
+
+   delete Object.greet;     // returns => false; Object.greet is not configurable
+
+```
+
+### defs( item:Mixed, descriptors:Object, mode:String|Object[, overwrite:Boolean, debug:Boolean]] ):n8iv
+Similar to `n8iv.def` except `n8iv.defs` allows you to define multiple properties at once.
+
+**NOTE:** Calls `n8iv.def` internally.
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr><td>item</td><td>The item to define the properties on.</td></tr>
+	<tr><td>descriptors</td><td>An Object of properties apply to the item. Each of the <code>descriptors</code> key/ value pairs become the property name and value on the item. This can be a property descriptor, partial descriptor or just the value you want to assign.</td></tr>
+	<tr><td>mode</td><td>The permissions to apply to each property descriptor in the <code>descriptors</code> Object. See <code>n8iv.describe</code> directly below and <code>n8iv.modes</code> to find out more about this.</td></tr>
+	<tr><td>overwrite</td><td>Whether or not to attempt overwriting the new property if it exists.</td></tr>
+	<tr><td>debug</td><td>Whether or not to throw an error if the property already exists.</td></tr>
+</table>
+
+The last two – optional – parameters are handy for extending JavaScript Natives without risking collisions with native/ other implementations.
+
+#### Example:
+
+```javascript
+
+   n8iv.defs( Object, {
+      accessor : { get : function() { return this.__accessor; }, set : function( a ) { this.__accessor = a; } },
+      global   : { value : window },
+      greeting : function( name ) { return 'Hello ' + name + '!'; }
+   }, 'w' ) );
+/**
+   IMPORTANT TO NOTE: Accessors do not alllow the "writeable" attribute to even be present in the descriptor Object.
+                      see: https://plus.google.com/117400647045355298632/posts/YTX1wMry8M2
+                      n8iv.def handles this internally, so if a "get" or "set" Function is in the descriptor, the
+                      "writeable" attribute will be removed from the descriptor, if it exists.
+**/
+
+   Object.accessor = 'foo'; // returns => 'foo'
+   Object.accessor;         // returns => 'foo'
+
+   Object.global === window // returns => true
+   Object.greet( 'world' ); // returns => "Hello world!"
+
+   delete Object.greet;     // returns => false; Object.greet is not configurable
+
+```
 
 ### describe( value:Mixed[, mode:Object|String] ):Object
 When using [Object.defineProperty](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/defineProperty) en masse, your property descriptors can really start to bulk out your codebase.
@@ -412,6 +463,8 @@ Returns the normalised `type` of the passed item.
 ## static properties
 
 ### modes:Object
+`n8iv.modes` is an Object containing all the variations on different permissions a property may have when assigned using `Object.defineProperty`.
+
 See `n8iv.describe` above for more information on how to use `n8iv.modes` to create property descriptors compatible with `Object.defineProperty`.
 
 #### Available modes are:
