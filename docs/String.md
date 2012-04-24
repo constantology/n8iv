@@ -34,9 +34,6 @@ Returns a copy of the String with the first character in uppercase and all subse
 
 ```
 
-### cc():String
-Alias for `toCamelCase`.
-
 ### clean( [character:String] ):String
 Returns a "clean" copy of the String with all duplicate characters removed. The most common example is removing multiple space characters from a String.
 
@@ -163,17 +160,6 @@ Returns `true` if the String contains a **case insensitive** version of the pass
 
 ```
 
-### lc():String
-Alias for `toLowerCase`.
-
-#### Example:
-
-```javascript
-
-   'LOREM IPSUM DOLOR'.lc() // returns => "lorem ipsum dolor"
-
-```
-
 ### parts( re:RegExp ):String[]
 Returns an Array of the **matched** parts of the resulting RegExp or an empty Array if there are no matches.
 
@@ -184,17 +170,6 @@ Returns an Array of the **matched** parts of the resulting RegExp or an empty Ar
    'a 1, a 2, a 1, 2, 3, hit it!'.parts( /(\d)/g )      // returns => ["1", "2", "1", "2", "3"]
 
    'a 1, a 2, a 1, 2, 3, hit it!'.parts( /(["'\.]+)/g ) // returns => []
-
-```
-
-### qw():Array
-Shorthand for splitting a String using `.split( ' ' );`.
-
-#### Example:
-
-```javascript
-
-   'one two three'.qw() // returns => ["one", "two", "three"]
 
 ```
 
@@ -334,17 +309,6 @@ Accepts an optional second parameter to use instead of an ellipsis.
    'lorem ipsum dolor'.truncate( 10, '... more' ) // returns => "lorem ipsu... more"
 
    'lorem ipsum dolor'.truncate( 20 )             // returns => "lorem ipsum dolor"
-
-```
-
-### uc():String
-Alias for `toUpperCase`.
-
-#### Example:
-
-```javascript
-
-   'lorem ipsum dolor'.uc() // returns => "LOREM IPSUM DOLOR"
 
 ```
 

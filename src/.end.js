@@ -1,4 +1,3 @@
-
-	n8iv.ENV != 'commonjs' || module.exports === n8iv || ( module.exports = n8iv );
-
-}( typeof n8iv != 'undefined' ? n8iv : typeof require != 'undefined' ? require( './n8iv._' ) : null );
+// at this point we don't know if m8 is available or not, and as such do not know what environment we are in.
+// so, we check and do what is required.
+}( typeof m8 != 'undefined' ? m8 : typeof require != 'undefined' ? require( 'm8' ) : null );

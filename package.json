@@ -4,12 +4,9 @@
 		"email"       : "christos@muigui.com",
 		"url"         : "http://muigui.com"
 	},
-	"description"     : "n8iv is an object-oriented & functional programming library – for modern javascript engines – which correctly extends JavaScript Natives, as well as providing other useful Classes. Giving you a – relatively – safe and easy to use API, to help make your code more succinct and efficient.",
-    "devDependencies" : {
-	    "Templ8"      : ">= 0.3.0",
-        "mkdirp"      : ">= 0.3.0",
-	    "uglify-js"   : ">= 1.2.5"
-    },
+	"description"     : "n8iv is a functional programming library – for modern javascript engines – which correctly extends JavaScript Natives. Giving you a – relatively – safe and easy to use API, to make your code more succinct and efficient.",
+	"dependencies"    : { "m8"     : ">= 0.1.0" },
+ 	"devDependencies" : { "Templ8" : ">= 0.3.0", "mkdirp" : ">= 0.3.0", "uglify-js" : ">= 1.2.5" },
 	"keywords"        : ["api", "framework", "functional", "javascript", "library", "object-oriented", "programming"],
 	"licenses"        : [ {
 		"type"        : "MIT",
@@ -21,5 +18,5 @@
 		"type"        : "git",
 		"url"         : "git@github.com:constantology/n8iv.git"
 	},
-	"version"         : "0.1.2"
+	"version"         : "0.2.0"
 }

@@ -2,25 +2,6 @@
 
 ## extensions to Function.prototype
 
-### @get n8ivName:Array
-Tries to return the name of a Function based on it's `name`, `displayName` and/ or examining the Function's `toString` method.
-
-If a Function is mimicking another Function it will return the mimicked Function's `n8ivName`.
-
-#### Example:
-
-```javascript
-
-   function foo( a, b, c ) { ... }
-
-   foo.n8ivName                                                // returns => "foo"
-
-   ( function( a, b, c ) { ... } ).n8ivName                    // returns => "anonymous"
-
-   var = function bar( a, b, c ) { ... }.mimic( foo ).n8ivName // returns => "foo"
-
-```
-
 ### @get params:Array
 Returns an Array of the argument names in a Function declaration by examining the Function's `toString` method.
 
@@ -41,9 +22,9 @@ If the Function is not executed successfully, `attempt` will perform a `console.
 
 ```javascript
 
-                ( function( foo ) { return foo; } ).attempt( null, true );   // returns => true
+            ( function( foo ) { return foo; } ).attempt( null, true );   // returns => true
 
-   n8iv.type( ( function( foo ) { return bar; } ).attempt( null, true ) ); // returns => 'error'
+   m8.type( ( function( foo ) { return bar; } ).attempt( null, true ) ); // returns => 'error'
 
 ```
 
@@ -116,25 +97,6 @@ The `delayed` Function returned has a `stop` Function and the `timeoutId` attach
    // log => 4
    // log => 2
    // 3 is NOT logged because the delayed Function was stopped!
-
-```
-
-### mimic( callback:Function[, name:String] ):Function
-Makes the Function look like the passed `callback` Function. Handy for profiling & debugging.
-
-#### Example:
-
-```javascript
-
-   function foo() { ... }
-
-   var bar = function() { ... }.mimic( foo );
-
-   bar.toString()           // returns => "function foo() { ... }"
-
-   bar.valueOf()            // returns => foo()
-
-   bar.displayName == 'foo' // returns => true
 
 ```
 

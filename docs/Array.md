@@ -1,38 +1,5 @@
 # Array
 
-## static methods
-
-### from( value:Mixed ):Array
-Returns an Array based on the passed `value`.
-
-If the value is "Array like", e.g: a `HtmlCollection`, `NodeList` or Function `Arguments`, then an Array version will be returned.
-
-Otherwise the `value` is wrapped in an Array and the Array is returned.
-
-#### Example:
-
-```html
-
-   <body>
-      <div id="one"></div>
-      <div id="two"></div>
-      <div id="three"></div>
-   </body>
-
-```
-
-```javascript
-
-   Array.from( document.body.children );                               // returns => [div#one, div#two, div#three]
-
-   Array.from( document.body.querySelectorAll( '*' ) );                // returns => [div#one, div#two, div#three]
-
-   Array.from( function( a, b, c ) { return arguments; }( 1, 2, 3 ) ); // returns => [1, 2, 3]
-
-   Array.from( { one : 1, two : 2, three : 3 } );                      // returns => [{ one : 1, two : 2, three : 3 }]
-
-```
-
 ## static properties
 
 ### sortFns:Function{}
@@ -52,7 +19,7 @@ Default ascending and descending sort Functions available for your convenience.
 
 ```javascript
 
-   Array.from( document.body.children ).sortBy( 'data-pos', 'desc' ); // returns => [div#three, div#two, div#one]
+   Array.coerce( document.body.children ).sortBy( 'data-pos', 'desc' ); // returns => [div#three, div#two, div#one]
 
 ```
 
@@ -169,23 +136,6 @@ The conditions to satisfy the Array's being equal are:
    [1, 2, 3].equalTo( [1, 2, 3, 4] ); // returns => false
 
 ```
-
-### find( iterator:Function[, context:Object] ):Mixed
-Returns the first item in the Array that returns a "truthy" value when executing the passed `iterator` function over the Array, or `null` if none is found.
-
-#### Example:
-
-```javascript
-
-   [1, 2, 3, 4].find( function( value ) { return value > 2; } );                     // returns => 3
-
-   [1, 2, 3, 4].find( function( value, index ) { return value > 2 && index > 2; } ); // returns => 4
-
-   [1, 2, 3, 4].find( function( value ) { return value > 4; } );                     // returns => null
-
-```
-
-**REMEMBER:** The ACTUAL item in the Array is returned, NOT the `iterator`'s return value.
 
 ### flatten( [depth:Number] ):Array
 Returns a one dimensional copy of the Array. Alternatively, you can pass a `depth` parameter to limit how many levels to `flatten`.

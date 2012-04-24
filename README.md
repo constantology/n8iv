@@ -1,39 +1,57 @@
-# n8iv.js
+# MENTAL NOTE: THIS REPOSITORY HAS BEEN SPLIT INTO 3
+I have decided that the former **n8iv** API would function better as 3 separate libraries:
 
-n8iv is an object-oriented & functional programming library – for modern javascript engines – which correctly extends JavaScript Natives – using Object.defineProperty. As well as providing other useful Classes. Giving you a – relatively – safe and easy to use API, to help make your code more succinct and efficient.
+1. [m8.js](/constantology/m8): what used to be n8iv._, will now serve as a base for most of my libraries, to eliminate duplicate utility methods
+2. [id8.js](/constantology/id8): this is the old n8iv.Oo; and
+3. n8iv.js: this is the old n8iv.Fn, which is this repository... right... here...
+
+Apologies for any inconvenience caused.
+
+# n8iv.js
+n8iv is a functional programming library – for modern javascript engines – which correctly extends JavaScript Natives. Giving you a – relatively – safe and easy to use API, to make your code more succinct and efficient.
 
 n8iv is based on the awesomeness of [prototypejs](https://github.com/savetheclocktower/prototype).
 
-If you like the idea of having one global variable with a bunch of static functions – in no particular order – attached to it, then this is probably not the framework for you. If, however, you like your methods bound to your types, then come on in and sit a spell!
+If you like the idea of having one global variable with a bunch of static functions – in no particular order – attached to it, then this is probably not the framework for you.
+
+If you think that extending JavaScript Natives is a "bad part" of JavaScript, then this is probably not the framework for you.
+
+If, however, you like your methods bound to your types, then come on in and sit a spell!
 
 **n8iv will not overwrite any implementations – native or otherwise – of any methods, properties or accessors already defined.**
 
-n8iv comes in 3 parts:
-
-- `n8iv._.js`  : is where all the base n8iv functionality – used across the other 2 parts – is defined.
-- `n8iv.Fn.js` : is where all the extensions to JavaScript's natives takes place.
-- `n8iv.Oo.js` : is where the n8iv Class system and a few useful Classes are defined.
-
-All of the above are pakaged as a single file: `n8iv.js`.
-
-If you don't like the idea of extending JavaScript natives, you can still to take advantage of the functionality defined in: `n8iv._.js` and `n8iv.Oo.js`.
-
 ## WARNING!!!
+While **n8iv** has been tested, the testing framework I've written and used is very much a work in progress.
 
-This is an, as yet, untested framework, use at your own risk!
+Also I'm currently between virtual machine software and operating system licenses, so I have only tested on mac osx lion and snow leopard: nodejs – >= v0.613 – as well as current – and beta/ nightly – versions of Chrome, Safari/ Webkit and FireFox.
 
-## File sizes
+## Dependencies
+
+n8iv.js only has one dependency [m8.js](/constantology/m8).
+
+**NOTE:**
+If you are using n8iv within a commonjs module, you don't need to require m8 before requiring n8iv as this is done internally and a reference to **m8** is available as: `n8iv.m8`.
+
+```javascript
+
+   var n8iv = require( 'n8iv' ),
+       m8  = n8iv.m8; // <= reference to m8
+
+// if running in a sandboxed environment remember to:
+   m8.x( Object, Array, Boolean, Function, String ); // and/ or any other Types that require extending.
+// alternatively, this does the same and returns the n8iv global
+   n8iv( Object, Array, Boolean, Function, String );
+
+```
+
+See [m8: Extending into the future](/constantology/m8) for more information on working with sandboxed modules.
+
+## File size
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tbody>
-		<tr><td style="width : 80px ;">n8iv._.js</td><td style="width : 48px ;">3.4kb</td><td>deflate</td>
-		<tr><td>n8iv._.min.js</td><td>2.6kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.Fn.js</td><td>4.0kb</td><td>deflate</td>
-		<tr><td>n8iv.Fn.min.js</td><td>3.1kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.Oo.js</td><td>4.5kb</td><td>deflate</td>
-		<tr><td>n8iv.Oo.min.js</td><td>3.4kb</td><td>uglified + deflate</td>
-		<tr><td>n8iv.js</td><td>11.2kb</td><td>deflate</td>
-		<tr><td>n8iv.min.js</td><td>8.2kb</td><td>uglified + deflate</td>
+		<tr><td style="width : 80px ;">n8iv.js</td><td style="width : 48px ;">4.1kb</td><td>deflate</td>
+		<tr><td>n8iv.min.js</td><td>3.1kb</td><td>uglified + deflate</td>
 	</tbody>
 </table>
 

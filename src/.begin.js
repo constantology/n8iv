@@ -1,3 +1,2 @@
-!function( n8iv ) {
+!function( m8 ) {
 	"use strict";
-	var F = !1, N = null, T = !0, U;
