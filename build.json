@@ -5,6 +5,6 @@
 	"out"       : { "dir" : "./", "file" : "n8iv", "min" : "n8iv.min" },
 	"src" : {
 		"dir"   : "./src",
-		"files" : [".begin", "Object", "Function", "Array", "Number", "String", "n8iv", ".end"]
+		"files" : ["_begin", "Object", "Function", "Array", "Number", "String", "expose", "_end"]
 	}
 }
