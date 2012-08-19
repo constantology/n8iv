@@ -1,5 +1,5 @@
-m8.x.cache( 'String', function( Type ) {
-	var cache_chars = m8.obj(),           cache_slices    = m8.obj(),
+util.x.cache( 'String', function( Type ) {
+	var cache_chars = util.obj(),           cache_slices    = util.obj(),
 		esc_chars   = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
 		esc_val     = '\\$1',             re_caps         = /([A-Z])/g,
 		re_gsub     = /\$?\{([^\}]+)\}/g, re_hex          = /#?(\w{1,6})/,
@@ -21,7 +21,7 @@ m8.x.cache( 'String', function( Type ) {
  * However, since we are extending prototypes the correct way, we don't need worry.
  * When the new methods are implemented, they will not be overwritten, instead, the methods here will be discarded.
  * */
-	m8.defs( Type.prototype, {
+	util.defs( Type.prototype, {
 		blank        : function() { return !!this.trim().empty(); },
 		capitalize   : function() { return this.charAt( 0 ).toUpperCase() + this.substring( 1 ).toLowerCase(); },
 		clean        : function( character ) {
@@ -78,7 +78,7 @@ m8.x.cache( 'String', function( Type ) {
 			return as_array === true ? v : 'rgb(' + v.join( ', ' ) + ')';
 		},
 		truncate     : function( i, c ) {
-			i || ( i = 50 ); m8.nativeType( c ) == 'string' || ( c = '...' );
+			i || ( i = 50 ); util.nativeType( c ) == 'string' || ( c = '...' );
 			return this.length < i ? Type( this ) : this.substring( 0, i ).trimRight() + c;
 		},
 		underscore   : function() { return splitString( this ).join( '_' ).toLowerCase(); }

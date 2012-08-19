@@ -1,4 +1,4 @@
-m8.x.cache( 'Array', function( Type ) {
+util.x.cache( 'Array', function( Type ) {
 	function groupByFn( field, v ) { return field( v ) ? 0 : 1; }
 	function groupByRegExp( field, v ) { return field.test( v ) ? 0 : 1; }
 	function groupByStr( field, v ) { return Object.value( v, field ) || 1; }
@@ -15,28 +15,28 @@ m8.x.cache( 'Array', function( Type ) {
 	sort[String( true )] = sort[1] = sort.asc;
 	sort[String( !1 )]   = sort[0] = sort.desc;
 
-	m8.def( Type, 'sortFns', m8.describe( { value : sort }, 'w' ) );
+	util.def( Type, 'sortFns', util.describe( { value : sort }, 'w' ) );
 
-	m8.defs( Type.prototype, {
+	util.defs( Type.prototype, {
 		aggregate : function( val, fn, ctx ) {
 			return PROTO.reduce.call( this, function( val, o, i, a ) {
 				return fn.call( ctx || o, val, o, i, a );
 			}, val );
 		},
 		associate : function( a, fn, ctx ) {
-			fn || ( fn = m8 ); ctx || ( ctx = this );
+			fn || ( fn = util ); ctx || ( ctx = this );
 			return PROTO.reduce.call( this, function( o, v, i ) {
 				o[a[i]] = fn.call( ctx, v, i, this );
 				return o;
-			}, m8.obj() );
+			}, util.obj() );
 		},
 		clear     : function() { this.length = 0; return this; },
 		clone     : function() { return PROTO.slice.call( this ); },
-		compact   : function( falsey ) { return PROTO.mapc.call( this, falsey === true ? isFalsey : m8 ); },
+		compact   : function( falsey ) { return PROTO.mapc.call( this, falsey === true ? isFalsey : util ); },
 		contains  : function( o ) { return !!~PROTO.indexOf.call( this, o ); },
 		each      : function( fn, ctx ) { PROTO.forEach.call( this, fn, ctx || this ); return this; },
 		flatten   : function( n ) {
-			if ( m8.type( n ) == 'number' ) {
+			if ( util.type( n ) == 'number' ) {
 				if ( n > 0 ) --n;
 				else return this;
 			}
@@ -46,18 +46,18 @@ m8.x.cache( 'Array', function( Type ) {
 			}, this );
 		},
 		grep : function( re, fn, ctx ) {
-			var a = this; fn || ( fn = m8 ); ctx || ( ctx = a );
-			m8.nativeType( re ) != 'string' || ( re = new RegExp( re.escapeRE(), 'g' ) );
+			var a = this; fn || ( fn = util ); ctx || ( ctx = a );
+			util.nativeType( re ) != 'string' || ( re = new RegExp( re.escapeRE(), 'g' ) );
 			return PROTO.aggregate.call( a, [], function( v, o, i ) {
 				!re.test( o ) || v.push( fn.call( ctx, o, i, a ) );
 				return v;
 			} );
 		},
 		groupBy   : function( f, fn, ctx ) {
-			fn || ( fn = m8 );
-			var a = this, keys, match, res = m8.obj();
+			fn || ( fn = util );
+			var a = this, keys, match, res = util.obj();
 			
-			switch( m8.type( f ) ) {
+			switch( util.type( f ) ) {
 				case 'function' : match = groupByFn;       break;
 				case 'regexp'   : match = groupByRegExp;   break;
 				case 'number'   :
@@ -81,7 +81,7 @@ m8.x.cache( 'Array', function( Type ) {
 		invokec   : function( fn ) {
 			var args = Type.coerce( arguments, 1 );
 			return PROTO.mapc.call( this, function( o, i ) {
-				return m8.nativeType( o[fn] ) == 'function' ? o[fn].apply( o, args ) : null;
+				return util.nativeType( o[fn] ) == 'function' ? o[fn].apply( o, args ) : null;
 			} );
 		}, 
 		item      : function( i ) { return this[i < 0 ? this.length + i : i]; },
@@ -89,7 +89,7 @@ m8.x.cache( 'Array', function( Type ) {
 		mapc      : function( fn, ctx ) {
 			ctx || ( ctx = this );
 			return PROTO.reduce.call( this, function( v, o, i, a ) {
-				!m8.exists( ( o = fn.call( ctx, o, i, a ) ) ) || v.push( o );
+				!util.exists( ( o = fn.call( ctx, o, i, a ) ) ) || v.push( o );
 				return v;
 			}, [] );
 		}, 
@@ -106,7 +106,7 @@ m8.x.cache( 'Array', function( Type ) {
 		},
 		sortBy    : function( f, d ) { // schwartzian optimised
 			return PROTO.map.call( this, sortingVal, f )
-						.sort( m8.nativeType( d ) == 'function' ? d : sort[String( d ).toLowerCase()] || sort.asc )
+						.sort( util.nativeType( d ) == 'function' ? d : sort[String( d ).toLowerCase()] || sort.asc )
 						.map( sortedVal );
 		},
 		tuck      : function( k, a ) {
