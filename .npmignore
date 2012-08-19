@@ -4,10 +4,3 @@
 
 node_modules
 npm-debug.log
-
-docs/Function.bak.md
-test
-src
-src/.*
-build*
-*.min.js

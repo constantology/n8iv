@@ -20,11 +20,6 @@ If, however, you like your methods bound to your types, then come on in and sit 
 
 **n8iv will not overwrite any implementations – native or otherwise – of any methods, properties or accessors already defined.**
 
-## WARNING!!!
-While **n8iv** has been tested, the testing framework I've written and used is very much a work in progress.
-
-Also I'm currently between virtual machine software and operating system licenses, so I have only tested on mac osx lion and snow leopard: nodejs – >= v0.6.13 – as well as current – and beta/ nightly – versions of Chrome, Safari/ Webkit and FireFox.
-
 ## Dependencies
 
 n8iv.js only has one dependency [m8.js](/constantology/m8).
