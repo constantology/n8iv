@@ -41,14 +41,9 @@ If you are using n8iv within a commonjs module, you don't need to require m8 bef
 
 See [m8: Extending into the future](/constantology/m8) for more information on working with sandboxed modules.
 
-## File size
+## Support
 
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tbody>
-		<tr><td style="width : 80px ;">n8iv.js</td><td style="width : 48px ;">4.1kb</td><td>deflate</td>
-		<tr><td>n8iv.min.js</td><td>3.1kb</td><td>uglified + deflate</td>
-	</tbody>
-</table>
+Tested to work with nodejs, FF4+, Safari 5+, Chrome 7+, IE9+. Should technically work in any browser that supports [ecma 5]( http://kangax.github.com/es5-compat-table/) without throwing any JavaScript errors.
 
 ## License
 

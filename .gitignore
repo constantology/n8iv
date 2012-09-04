@@ -5,3 +5,5 @@ node_modules/
 npm-debug.log
 
 docs/README.md
+
+runner.js

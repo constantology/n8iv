@@ -1,9 +1,10 @@
 util.x.cache( 'String', function( Type ) {
 	var cache_chars = util.obj(),           cache_slices    = util.obj(),
-		esc_chars   = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
-		esc_val     = '\\$1',             re_caps         = /([A-Z])/g,
-		re_gsub     = /\$?\{([^\}]+)\}/g, re_hex          = /#?(\w{1,6})/,
-		re_rgb      = /(\d{1,3})/g,       re_split_string = /[\sA-Z_-]+/g;
+		esc_chars     = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
+		esc_val       = '\\$1',             re_caps         = /([A-Z])/g,
+		re_gsub       = /\$?\{([^\}]+)\}/g, re_hex          = /#?(\w{1,6})/,
+		re_rgb        = /(\d{1,3})/g,       re_split_string = /[\sA-Z_-]+/g,
+		re_trim_right = /(.*?)\s*$/;
 
 // so we don't lose any chars on split
 	function _splitString( m, p ) { return p + p.toLowerCase(); }
@@ -76,6 +77,9 @@ util.x.cache( 'String', function( Type ) {
 			}
 			v = o.sliceEvery( 2 ).map( function( v ) { return parseInt( v, 16 ); } );
 			return as_array === true ? v : 'rgb(' + v.join( ', ' ) + ')';
+		},
+		trimRight    : function() {
+			return this.replace( re_trim_right, '$1' );
 		},
 		truncate     : function( i, c ) {
 			i || ( i = 50 ); util.nativeType( c ) == 'string' || ( c = '...' );

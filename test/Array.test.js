@@ -204,7 +204,7 @@ suite( 'Array', function() {
 				return o.cls.replace( /\s/g, '' );
 			},
 			function( a, b ) {
-				return a[1] == b[1] ? a[0].value > a[0].value ? 1 : -1 : a[1] > b[1] ? 1 : -1;
+				return a[1] == b[1] ? a[0].value > b[0].value ? 1 : -1 : a[1] > b[1] ? 1 : -1;
 			} ) ).to.eql( [o1, o2, o3, o4] );
 
 		done();

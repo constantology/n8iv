@@ -22,5 +22,5 @@
 		"rebuild"     : "node ./build.js",
 		"test"        : "mocha -c --globals mocha,expect,m8,n8iv -R spec -s 275 -u tdd ./test"
 	},
-	"version"         : "0.2.1"
+	"version"         : "0.2.2"
 }

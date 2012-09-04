@@ -96,9 +96,9 @@ util.x.cache( 'Function', function( Type ) {
 } );
 
 util.x.cache( 'Array', function( Type ) {
-	function groupByFn( field, v ) { return field( v ) ? 0 : 1; }
-	function groupByRegExp( field, v ) { return field.test( v ) ? 0 : 1; }
-	function groupByStr( field, v ) { return Object.value( v, field ) || 1; }
+	function groupByFn( field, v ) { return field( v ) ? '0' : '1'; }
+	function groupByRegExp( field, v ) { return field.test( v ) ? '0' : '1'; }
+	function groupByStr( field, v ) { return Object.value( v, field ) || '1'; }
 	function isFalsey( o ) { return !o ? null : o; }
 	function sortedVal( o )  { return o[0]; }
 	function sortingVal( o ) { return [o, ( typeof this == 'function' ? this( o ) : Object.value( o, this ) )]; }
@@ -152,7 +152,7 @@ util.x.cache( 'Array', function( Type ) {
 		},
 		groupBy   : function( f, fn, ctx ) {
 			fn || ( fn = util );
-			var a = this, keys, match, res = util.obj();
+			var a = this, keys, match, res = {};
 			
 			switch( util.type( f ) ) {
 				case 'function' : match = groupByFn;       break;
@@ -163,7 +163,11 @@ util.x.cache( 'Array', function( Type ) {
 				default         : throw new TypeError( 'Array.prototype.groupBy can only match based on a Function, RegExp or String.' );
 			}
 			
-			( keys || [0, 1] ).forEach( function( k ) { res[k] = []; } );
+			if ( keys ) keys.forEach( function( k ) { res[k] = []; } );
+			else {
+				res['0'] = [];
+				res['1'] = [];
+			}
 			
 			return PROTO.aggregate.call( a, res, function( v, o, i ) {
 				v[match( f, o )].push( fn.call( this, o, i, a ) );
@@ -257,10 +261,11 @@ util.x.cache( 'Number', function( Type ) {
 
 util.x.cache( 'String', function( Type ) {
 	var cache_chars = util.obj(),           cache_slices    = util.obj(),
-		esc_chars   = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
-		esc_val     = '\\$1',             re_caps         = /([A-Z])/g,
-		re_gsub     = /\$?\{([^\}]+)\}/g, re_hex          = /#?(\w{1,6})/,
-		re_rgb      = /(\d{1,3})/g,       re_split_string = /[\sA-Z_-]+/g;
+		esc_chars     = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
+		esc_val       = '\\$1',             re_caps         = /([A-Z])/g,
+		re_gsub       = /\$?\{([^\}]+)\}/g, re_hex          = /#?(\w{1,6})/,
+		re_rgb        = /(\d{1,3})/g,       re_split_string = /[\sA-Z_-]+/g,
+		re_trim_right = /(.*?)\s*$/;
 
 // so we don't lose any chars on split
 	function _splitString( m, p ) { return p + p.toLowerCase(); }
@@ -333,6 +338,9 @@ util.x.cache( 'String', function( Type ) {
 			}
 			v = o.sliceEvery( 2 ).map( function( v ) { return parseInt( v, 16 ); } );
 			return as_array === true ? v : 'rgb(' + v.join( ', ' ) + ')';
+		},
+		trimRight    : function() {
+			return this.replace( re_trim_right, '$1' );
 		},
 		truncate     : function( i, c ) {
 			i || ( i = 50 ); util.nativeType( c ) == 'string' || ( c = '...' );
