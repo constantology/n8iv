@@ -1,22 +1,24 @@
-typeof m8     !== 'undefined' || ( m8     = require( 'm8' ) );
-typeof n8iv   !== 'undefined' || ( n8iv   = require( 'n8iv' ) );
-typeof expect !== 'undefined' || ( expect = require( 'expect.js' ) );
+typeof m8   !== 'undefined' || ( m8   = require( 'm8'   ) );
+typeof n8iv !== 'undefined' || ( n8iv = require( 'n8iv' ) );
+typeof chai !== 'undefined' || ( chai = require( 'chai' ) );
+
+expect = chai.expect;
 
 suite( 'Function', function() {
 	test( '<static> coerce', function( done ) {
 		var a = [1, 2, 3];
 
-			expect( Function.coerce( 'foo' )( 1, 2, 3) ).to.be( 'foo' );
-			expect( Function.coerce( a )( 4, 5, 6 ) ).to.be( a );
-			expect( Function.coerce( function( a, b, c ) { return [a, b, c]; } )( 7, 8, 9 ) ).to.eql( [7, 8, 9] );
+		expect( Function.coerce( 'foo' )( 1, 2, 3) ).to.equal( 'foo' );
+		expect( Function.coerce( a )( 4, 5, 6 ) ).to.equal( a );
+		expect( Function.coerce( function( a, b, c ) { return [a, b, c]; } )( 7, 8, 9 ) ).to.deep.equal( [7, 8, 9] );
 
 		done();
 	} );
 
 	test( 'params', function( done ) {
-			expect( function( one ){}.params ).to.eql( ['one'] );
-			expect( function( one, two, three ){}.params ).to.eql( ['one', 'two', 'three'] );
-			expect( function(){}.params ).to.eql( [] );
+		expect( function( one ){}.params ).to.deep.equal( ['one'] );
+		expect( function( one, two, three ){}.params ).to.deep.equal( ['one', 'two', 'three'] );
+		expect( function(){}.params ).to.deep.equal( [] );
 
 		done();
 	} );
@@ -24,31 +26,31 @@ suite( 'Function', function() {
 	test( 'attempt', function( done ) {
 		var ctx = { foo : 'bar' };
 
-			expect( ( function() {
-				expect( this ).to.be( ctx );
-				expect( arguments ).to.eql( [1, 2, 3] );
-				return true;
-			} ).attempt( ctx, 1, 2, 3 ) ).to.be( true );
-			expect( function() {
-				throw new TypeError( 'TestError' );
-			}.attempt() ).to.be.a( TypeError );
+		expect( ( function() {
+			expect( this ).to.equal( ctx );
+			expect( arguments ).to.deep.equal( [1, 2, 3] );
+			return true;
+		} ).attempt( ctx, 1, 2, 3 ) ).to.equal( true );
+		expect( function() {
+			throw new TypeError( 'TestError' );
+		}.attempt() ).to.be.an.instanceof( TypeError );
 
 		done();
 	} );
 
 	test( 'bake', function( done ) {
-			function testBake( o, a, b, c ) {
-				expect( o ).to.be( test );
-				expect( a ).to.eql( 1 );
-				expect( b ).to.eql( 2 );
-				expect( c ).to.eql( 3 );
-			}
+		function testBake( o, a, b, c ) {
+			expect( o ).to.equal( test );
+			expect( a ).to.deep.equal( 1 );
+			expect( b ).to.deep.equal( 2 );
+			expect( c ).to.deep.equal( 3 );
+		}
 
-			function Test() {}
-			Test.prototype.baked = testBake.bake();
+		function Test() {}
+		Test.prototype.baked = testBake.bake();
 
-			var test = new Test();
-			test.baked( 1, 2, 3 );
+		var test = new Test();
+		test.baked( 1, 2, 3 );
 
 		done();
 	} );
@@ -58,26 +60,27 @@ suite( 'Function', function() {
 		( function() {
 			var a = arguments, r = this;
 
-				expect( Date.now() - n ).to.be.within( 0, 50 );
-				expect( r ).to.be( ctx );
-				expect( a ).to.eql( [1, 2, 3] );
+// the reason the range is so high is because MSIE 10 f**ks out, MSIE9 and every other browser are fine
+// must be one of them improved MSIE10 features, improved f**king out
+			expect( Date.now() - n ).to.be.within( 0, 250 );
+			expect( r ).to.equal( ctx );
+			expect( a ).to.deep.equal( [1, 2, 3] );
 
 			done();
 		} ).defer( ctx, 1, 2, 3 );
-
 	} );
 
 	test( 'delay', function( done ) {
 		var ctx = { foo : 'bar' }, n = Date.now();
 		( function() {
 			var a = arguments, r = this;
-				expect( Date.now() - n ).to.be.within( 110, 175 );
-				expect( r ).to.be( ctx );
-				expect( a ).to.eql( [1, 2, 3] );
+
+			expect( Date.now() - n ).to.be.within( 110, 175 );
+			expect( r ).to.equal( ctx );
+			expect( a ).to.deep.equal( [1, 2, 3] );
 
 			done();
 		} ).delay( 125, ctx, 1, 2, 3 );
-
 	} );
 
 	test( 'memoize', function( done ) {
@@ -90,12 +93,12 @@ suite( 'Function', function() {
 			tm_original   = t.method.bind( t ),
 			test_memoized = t.method.memoize( t, m8.obj( { 'testing' : 'testing', 'testing,memoization' : 'testing memoization' } ) );
 
-			expect( test_memoized ).not.to.be( tm_original );
-			expect( test_memoized( 'testing' ) ).to.eql( 'testing' );
-			expect( test_memoized( 'testing', 'memoization' ) ).to.eql( 'testing memoization' );
-			expect( test_memoized( 'testing', 'memoization', 'but' ) ).to.eql( 'testing memoization but' );
-			expect( test_memoized( 'testing', 'memoization', 'but', 'not' ) ).to.eql( 'testing memoization but not' );
-			expect( test_memoized( 'testing', 'memoization', 'but', 'not', 'optimisation' ) ).to.eql( 'testing memoization but not optimisation' );
+		expect( test_memoized ).not.to.equal( tm_original );
+		expect( test_memoized( 'testing' ) ).to.deep.equal( 'testing' );
+		expect( test_memoized( 'testing', 'memoization' ) ).to.deep.equal( 'testing memoization' );
+		expect( test_memoized( 'testing', 'memoization', 'but' ) ).to.deep.equal( 'testing memoization but' );
+		expect( test_memoized( 'testing', 'memoization', 'but', 'not' ) ).to.deep.equal( 'testing memoization but not' );
+		expect( test_memoized( 'testing', 'memoization', 'but', 'not', 'optimisation' ) ).to.deep.equal( 'testing memoization but not optimisation' );
 
 		done();
 	} );
@@ -105,10 +108,10 @@ suite( 'Function', function() {
 		function two() {}
 		two.mimic( one );
 
-			expect( one ).not.to.be(  two );
-			expect( one ).not.to.eql( two );
-			expect( one.valueOf()  ).to.eql( two.valueOf()  );
-			expect( one.toString() ).to.eql( two.toString() );
+		expect( one ).not.to.equal(  two );
+		expect( one ).not.to.deep.equal( two );
+		expect( one.valueOf()  ).to.deep.equal( two.valueOf()  );
+		expect( one.toString() ).to.deep.equal( two.toString() );
 
 		done();
 	} );
@@ -118,6 +121,5 @@ suite( 'Function', function() {
 			expect( done ).to.be.an( 'function' );
 			done();
 		} )();
-
 	} );
 } );

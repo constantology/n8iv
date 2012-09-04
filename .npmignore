@@ -1,8 +1,14 @@
-.DS_Store
 .git*
+.DS_Store
 .idea
 
 node_modules
 npm-debug.log
 
 runner.js
+
+*msie*
+*.bak*
+*.local*
+
+docs/README.md

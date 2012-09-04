@@ -1,9 +1,14 @@
-.DS_Store
-.idea/
 
-node_modules/
+.DS_Store
+.idea
+
+node_modules
 npm-debug.log
 
-docs/README.md
-
 runner.js
+
+*msie*
+*.bak*
+*.local*
+
+docs/README.md
