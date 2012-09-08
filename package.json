@@ -30,7 +30,7 @@
 		"url"         : "git@github.com:constantology/n8iv.git"
 	},
 	"scripts"         : {
-		"test"        : "mocha -c --ignore-leaks -R spec -s 275 -u tdd ./test/Array.test.js ./test/Function.test.js ./test/Number.test.js ./test/Object.test.js ./test/String.test.js"
+		"test"        : "mocha -c --ignore-leaks -R spec -s 275 -u tdd ./test/*.test.js"
 	},
-	"version"         : "0.2.3"
+	"version"         : "0.2.4"
 }
