@@ -1,11 +1,11 @@
 	function __lib__() {
 		util.x.apply( util, arguments );
-		return n8iv;
+		return __lib__;
 	}
 
 	function x( Type, extender ) {
 		util.x.cache( Type.__name__, extender ).x( Type );
-		return n8iv;
+		return __lib__;
 	}
 
 	util.iter( PACKAGE ) || ( PACKAGE = util.ENV == 'commonjs' ? module : util.global );
