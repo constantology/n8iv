@@ -1,0 +1,10 @@
+{
+	"source"    : {
+		"dir"   : "./src",
+		"files" : ["Object", "Function", "Array", "Number", "String", "expose"]
+	},
+	"target"    : {
+		"dir"   : "{pwd}"
+	},
+	"type"      : "application/javascript"
+}

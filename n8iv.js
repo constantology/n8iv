@@ -1,7 +1,7 @@
-
 ;!function( util, Name, PACKAGE ) {
 	"use strict";
 
+/*~  n8iv/src/Object.js  ~*/
 util.x.cache( 'Object', function( Type ) {
 	function  arraysEqual( a1, a2 ) {
 		return a1.length == a2.length && Array.coerce( a1 ).every( function( v, i ) { return Type.equalTo( a2[i], v ); } );
@@ -34,6 +34,7 @@ util.x.cache( 'Object', function( Type ) {
 	}, 'w' );
 } );
 
+/*~  n8iv/src/Function.js  ~*/
 util.x.cache( 'Function', function( Type ) {
 	var re_args  = /^[\s\(]*function[^\(]*\(([^\)]*)\)/,
 		re_split = /\s*,\s*/;
@@ -95,6 +96,7 @@ util.x.cache( 'Function', function( Type ) {
 	}, 'w' );
 } );
 
+/*~  n8iv/src/Array.js  ~*/
 util.x.cache( 'Array', function( Type ) {
 	function groupByFn( field, v ) { return field( v ) ? '0' : '1'; }
 	function groupByRegExp( field, v ) { return field.test( v ) ? '0' : '1'; }
@@ -231,6 +233,7 @@ util.x.cache( 'Array', function( Type ) {
 	}, 'w' );
 } );
 
+/*~  n8iv/src/Number.js  ~*/
 util.x.cache( 'Number', function( Type ) {
 	var abs = Math.abs, big_int = 9007199254740992, floor = Math.floor;
 
@@ -259,6 +262,7 @@ util.x.cache( 'Number', function( Type ) {
 	}, 'w' );
 } );
 
+/*~  n8iv/src/String.js  ~*/
 util.x.cache( 'String', function( Type ) {
 	var cache_chars = util.obj(),           cache_slices    = util.obj(),
 		esc_chars     = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
@@ -350,6 +354,7 @@ util.x.cache( 'String', function( Type ) {
 	}, 'w' );
 } );
 
+/*~  n8iv/src/expose.js  ~*/
 	function __lib__() {
 		util.x.apply( util, arguments );
 		return __lib__;
@@ -363,7 +368,10 @@ util.x.cache( 'String', function( Type ) {
 	util.iter( PACKAGE ) || ( PACKAGE = util.ENV == 'commonjs' ? module : util.global );
 
 // expose n8iv
-	util.def( ( __lib__ = util.expose( __lib__, Name, PACKAGE ) ), 'x', x, 'r' );
+	util.defs( ( __lib__ = util.expose( __lib__, Name, PACKAGE ) ), {
+		util : util,
+		x    : x
+	}, 'r' );
 	util.expose( util, __lib__ );  // store a reference to m8 on n8iv
 
 	util.x( Object, Array, Function, Number, String );
