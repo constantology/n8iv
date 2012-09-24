@@ -1,5 +1,5 @@
 typeof m8   !== 'undefined' || ( m8   = require( 'm8'   ) );
-typeof n8iv !== 'undefined' || ( n8iv = require( 'n8iv' ) );
+typeof n8iv !== 'undefined' || ( n8iv = require( '../n8iv' ) );
 typeof chai !== 'undefined' || ( chai = require( 'chai' ) );
 
 expect = chai.expect;

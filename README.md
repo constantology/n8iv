@@ -1,13 +1,5 @@
-# MENTAL NOTE: THIS REPOSITORY HAS BEEN SPLIT INTO 3
-I have decided that the former **n8iv** API would function better as 3 separate libraries:
+# n8iv.js [![build status](https://secure.travis-ci.org/constantology/n8iv.png)](http://travis-ci.org/constantology/n8iv)
 
-1. [m8.js](/constantology/m8): what used to be n8iv._, will now serve as a base for most of my libraries, to eliminate duplicate utility methods
-2. [id8.js](/constantology/id8): this is the old n8iv.Oo; and
-3. n8iv.js: this is the old n8iv.Fn, which is this repository... right... here...
-
-Apologies for any inconvenience caused.
-
-# n8iv.js
 n8iv is a functional programming library – for modern javascript engines – which correctly extends JavaScript Natives. Giving you a – relatively – safe and easy to use API, to make your code more succinct and efficient.
 
 n8iv is based on the awesomeness of [prototypejs](https://github.com/savetheclocktower/prototype).
