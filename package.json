@@ -6,7 +6,7 @@
 	},
 	"description"     : "n8iv is a functional programming library – for modern javascript engines – which correctly extends JavaScript Natives. Giving you a – relatively – safe and easy to use API, to make your code more succinct and efficient.",
 	"dependencies"    : {
-		"m8"          : ">= 0.2.7"
+		"m8"          : ">= 0.3.1"
 	},
 	"devDependencies" : {
 		"catn8"       : ">= 0.0.2",
@@ -14,7 +14,7 @@
 		"mocha"       : ">= 1.4.2"
 	},
 	"engines"         : {
-		"node"        : ">= 0.4.x"
+		"node"        : ">= 0.8.x"
 	},
 	"keywords"        : ["api", "framework", "functional", "javascript", "library", "programming"],
 	"licenses"        : [ {
