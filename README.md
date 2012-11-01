@@ -37,6 +37,11 @@ See [m8: Extending into the future](/constantology/m8) for more information on w
 
 Tested to work with nodejs, FF4+, Safari 5+, Chrome 7+, IE9+. Should technically work in any browser that supports [ecma 5]( http://kangax.github.com/es5-compat-table/) without throwing any JavaScript errors.
 
+## File size
+
+- n8iv.js ≅ 4.6kb (gzipped)
+- n8iv.min.js ≅ 3.2kb (minzipped)
+
 ## License
 
 (The MIT License)
