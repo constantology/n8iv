@@ -1,7 +1,7 @@
 ;!function( util, Name, PACKAGE ) {
 	"use strict";
 
-/*~  n8iv/src/Object.js  ~*/
+/*~  src/Object.js  ~*/
 util.x.cache( 'Object', function( Type ) {
 	function  arraysEqual( a1, a2 ) {
 		return a1.length == a2.length && Array.coerce( a1 ).every( function( v, i ) { return Type.equalTo( a2[i], v ); } );
@@ -22,9 +22,9 @@ util.x.cache( 'Object', function( Type ) {
 			return o;
 		},
 		equalTo   : function( o, k ) {
-			switch ( util.nativeType( o ) ) {
-				case 'array'  : return Array.isArray( k )             ?  arraysEqual( o, k ) : false;
-				case 'object' : return util.nativeType( k ) == 'object' ? objectsEqual( o, k ) : false;
+			switch ( util.ntype( o ) ) {
+				case 'array'  : return Array.isArray( k )          ?  arraysEqual( o, k ) : false;
+				case 'object' : return util.ntype( k ) == 'object' ? objectsEqual( o, k ) : false;
 				case 'date'   : return +o == +k;
 			}
 			return o == k;
@@ -34,12 +34,12 @@ util.x.cache( 'Object', function( Type ) {
 	}, 'w' );
 } );
 
-/*~  n8iv/src/Function.js  ~*/
+/*~  src/Function.js  ~*/
 util.x.cache( 'Function', function( Type ) {
 	var re_args  = /^[\s\(]*function[^\(]*\(([^\)]*)\)/,
 		re_split = /\s*,\s*/;
 
-	util.def( Type, 'coerce', util.describe( function coerce( o ) { return util.nativeType( o ) == 'function' ? o : function() { return o; }; }, 'w' ) );
+	util.def( Type, 'coerce', util.describe( function coerce( o ) { return util.ntype( o ) == 'function' ? o : function() { return o; }; }, 'w' ) );
 
 	util.defs( Type.prototype, {
 // properties
@@ -77,7 +77,7 @@ util.x.cache( 'Function', function( Type ) {
 			} );
 		},
 		memoize   : function( ctx, cache ) {
-			var fn = this; util.nativeType( cache ) == 'object' || ( cache = util.obj() );
+			var fn = this; util.ntype( cache ) == 'object' || ( cache = util.obj() );
 			function memo() {
 				var args = Array.coerce( arguments ), s = args.toString();
 				return s in cache ? cache[s] : ( cache[s] = fn.apply( ctx, args ) );
@@ -96,7 +96,7 @@ util.x.cache( 'Function', function( Type ) {
 	}, 'w' );
 } );
 
-/*~  n8iv/src/Array.js  ~*/
+/*~  src/Array.js  ~*/
 util.x.cache( 'Array', function( Type ) {
 	function groupByFn( field, v ) { return field( v ) ? '0' : '1'; }
 	function groupByRegExp( field, v ) { return field.test( v ) ? '0' : '1'; }
@@ -146,7 +146,7 @@ util.x.cache( 'Array', function( Type ) {
 		},
 		grep : function( re, fn, ctx ) {
 			var a = this; fn || ( fn = util ); ctx || ( ctx = a );
-			util.nativeType( re ) != 'string' || ( re = new RegExp( re.escapeRE(), 'g' ) );
+			util.ntype( re ) != 'string' || ( re = new RegExp( re.escapeRE(), 'g' ) );
 			return PROTO.aggregate.call( a, [], function( v, o, i ) {
 				!re.test( o ) || v.push( fn.call( ctx, o, i, a ) );
 				return v;
@@ -184,7 +184,7 @@ util.x.cache( 'Array', function( Type ) {
 		invokec   : function( fn ) {
 			var args = Type.coerce( arguments, 1 );
 			return PROTO.mapc.call( this, function( o, i ) {
-				return util.nativeType( o[fn] ) == 'function' ? o[fn].apply( o, args ) : null;
+				return util.ntype( o[fn] ) == 'function' ? o[fn].apply( o, args ) : null;
 			} );
 		}, 
 		item      : function( i ) { return this[i < 0 ? this.length + i : i]; },
@@ -209,7 +209,7 @@ util.x.cache( 'Array', function( Type ) {
 		},
 		sortBy    : function( f, d ) { // schwartzian optimised
 			return PROTO.map.call( this, sortingVal, f )
-						.sort( util.nativeType( d ) == 'function' ? d : sort[String( d ).toLowerCase()] || sort.asc )
+						.sort( util.ntype( d ) == 'function' ? d : sort[String( d ).toLowerCase()] || sort.asc )
 						.map( sortedVal );
 		},
 		tuck      : function( k, a ) {
@@ -233,7 +233,7 @@ util.x.cache( 'Array', function( Type ) {
 	}, 'w' );
 } );
 
-/*~  n8iv/src/Number.js  ~*/
+/*~  src/Number.js  ~*/
 util.x.cache( 'Number', function( Type ) {
 	var abs = Math.abs, big_int = 9007199254740992, floor = Math.floor;
 
@@ -262,7 +262,7 @@ util.x.cache( 'Number', function( Type ) {
 	}, 'w' );
 } );
 
-/*~  n8iv/src/String.js  ~*/
+/*~  src/String.js  ~*/
 util.x.cache( 'String', function( Type ) {
 	var cache_chars = util.obj(),           cache_slices    = util.obj(),
 		esc_chars     = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
@@ -347,14 +347,14 @@ util.x.cache( 'String', function( Type ) {
 			return this.replace( re_trim_right, '$1' );
 		},
 		truncate     : function( i, c ) {
-			i || ( i = 50 ); util.nativeType( c ) == 'string' || ( c = '...' );
+			i || ( i = 50 ); util.ntype( c ) == 'string' || ( c = '...' );
 			return this.length < i ? Type( this ) : this.substring( 0, i ).trimRight() + c;
 		},
 		underscore   : function() { return splitString( this ).join( '_' ).toLowerCase(); }
 	}, 'w' );
 } );
 
-/*~  n8iv/src/expose.js  ~*/
+/*~  src/expose.js  ~*/
 	function __lib__() {
 		util.x.apply( util, arguments );
 		return __lib__;

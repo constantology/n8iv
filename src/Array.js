@@ -47,7 +47,7 @@ util.x.cache( 'Array', function( Type ) {
 		},
 		grep : function( re, fn, ctx ) {
 			var a = this; fn || ( fn = util ); ctx || ( ctx = a );
-			util.nativeType( re ) != 'string' || ( re = new RegExp( re.escapeRE(), 'g' ) );
+			util.ntype( re ) != 'string' || ( re = new RegExp( re.escapeRE(), 'g' ) );
 			return PROTO.aggregate.call( a, [], function( v, o, i ) {
 				!re.test( o ) || v.push( fn.call( ctx, o, i, a ) );
 				return v;
@@ -85,7 +85,7 @@ util.x.cache( 'Array', function( Type ) {
 		invokec   : function( fn ) {
 			var args = Type.coerce( arguments, 1 );
 			return PROTO.mapc.call( this, function( o, i ) {
-				return util.nativeType( o[fn] ) == 'function' ? o[fn].apply( o, args ) : null;
+				return util.ntype( o[fn] ) == 'function' ? o[fn].apply( o, args ) : null;
 			} );
 		}, 
 		item      : function( i ) { return this[i < 0 ? this.length + i : i]; },
@@ -110,7 +110,7 @@ util.x.cache( 'Array', function( Type ) {
 		},
 		sortBy    : function( f, d ) { // schwartzian optimised
 			return PROTO.map.call( this, sortingVal, f )
-						.sort( util.nativeType( d ) == 'function' ? d : sort[String( d ).toLowerCase()] || sort.asc )
+						.sort( util.ntype( d ) == 'function' ? d : sort[String( d ).toLowerCase()] || sort.asc )
 						.map( sortedVal );
 		},
 		tuck      : function( k, a ) {

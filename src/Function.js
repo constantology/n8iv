@@ -2,7 +2,7 @@ util.x.cache( 'Function', function( Type ) {
 	var re_args  = /^[\s\(]*function[^\(]*\(([^\)]*)\)/,
 		re_split = /\s*,\s*/;
 
-	util.def( Type, 'coerce', util.describe( function coerce( o ) { return util.nativeType( o ) == 'function' ? o : function() { return o; }; }, 'w' ) );
+	util.def( Type, 'coerce', util.describe( function coerce( o ) { return util.ntype( o ) == 'function' ? o : function() { return o; }; }, 'w' ) );
 
 	util.defs( Type.prototype, {
 // properties
@@ -40,7 +40,7 @@ util.x.cache( 'Function', function( Type ) {
 			} );
 		},
 		memoize   : function( ctx, cache ) {
-			var fn = this; util.nativeType( cache ) == 'object' || ( cache = util.obj() );
+			var fn = this; util.ntype( cache ) == 'object' || ( cache = util.obj() );
 			function memo() {
 				var args = Array.coerce( arguments ), s = args.toString();
 				return s in cache ? cache[s] : ( cache[s] = fn.apply( ctx, args ) );

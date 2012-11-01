@@ -82,7 +82,7 @@ util.x.cache( 'String', function( Type ) {
 			return this.replace( re_trim_right, '$1' );
 		},
 		truncate     : function( i, c ) {
-			i || ( i = 50 ); util.nativeType( c ) == 'string' || ( c = '...' );
+			i || ( i = 50 ); util.ntype( c ) == 'string' || ( c = '...' );
 			return this.length < i ? Type( this ) : this.substring( 0, i ).trimRight() + c;
 		},
 		underscore   : function() { return splitString( this ).join( '_' ).toLowerCase(); }

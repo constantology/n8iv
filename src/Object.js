@@ -18,9 +18,9 @@ util.x.cache( 'Object', function( Type ) {
 			return o;
 		},
 		equalTo   : function( o, k ) {
-			switch ( util.nativeType( o ) ) {
-				case 'array'  : return Array.isArray( k )             ?  arraysEqual( o, k ) : false;
-				case 'object' : return util.nativeType( k ) == 'object' ? objectsEqual( o, k ) : false;
+			switch ( util.ntype( o ) ) {
+				case 'array'  : return Array.isArray( k )          ?  arraysEqual( o, k ) : false;
+				case 'object' : return util.ntype( k ) == 'object' ? objectsEqual( o, k ) : false;
 				case 'date'   : return +o == +k;
 			}
 			return o == k;
