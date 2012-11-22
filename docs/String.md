@@ -122,7 +122,7 @@ If a token does not have a value, an empty String is used in its place.
 
 ```javascript
 
-   '{one} {two} {three} {four}'.format( { one : 'lorem', two : 'ipsum', three : 'dolor' } ) // returns => "lorem ipsum dolor "
+   '{one} {two} {three} {four}'.gsub( { one : 'lorem', two : 'ipsum', three : 'dolor' } ) // returns => "lorem ipsum dolor "
 
 ```
 

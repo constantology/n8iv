@@ -1,10 +1,9 @@
 util.x.cache( 'String', function( Type ) {
-	var cache_chars = util.obj(),           cache_slices    = util.obj(),
-		esc_chars     = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
-		esc_val       = '\\$1',             re_caps         = /([A-Z])/g,
-		re_gsub       = /\$?\{([^\}]+)\}/g, re_hex          = /#?(\w{1,6})/,
-		re_rgb        = /(\d{1,3})/g,       re_split_string = /[\sA-Z_-]+/g,
-		re_trim_right = /(.*?)\s*$/;
+	var cache_chars     = util.obj(),    cache_slices  = util.obj(),
+		esc_chars       = /([-\*\+\?\.\|\^\$\/\\\(\)[\]\{\}])/g,
+		esc_val         = '\\$1',        re_caps       = /([A-Z])/g,
+		re_hex          = /#?(\w{1,6})/, re_rgb        = /(\d{1,3})/g,
+		re_split_string = /[\sA-Z_-]+/g, re_trim_right = /(.*?)\s*$/;
 
 // so we don't lose any chars on split
 	function _splitString( m, p ) { return p + p.toLowerCase(); }
@@ -33,8 +32,8 @@ util.x.cache( 'String', function( Type ) {
 		contains     : function( s ) { return !!~this.indexOf( s ); },
 		empty        : function() { return Type( this ) === ''; },
 		endsWith     : function( s ) { return this.length && this.lastIndexOf( s ) == this.length - s.length; },
-		format       : function() { return this.gsub.call( this, Array.coerce( arguments ) ); },
-		gsub         : function( o, pattern ) { return this.replace( ( pattern || re_gsub ), function( m, p ) { return o[p] || ''; } ); },
+		format       : util.format.bake(),
+		gsub         : util.gsub.bake(),
 		hyphenate    : function() { return splitString( this ).join( '-' ).toLowerCase(); },
 		includes     : function( s ) { return this.toLowerCase().contains( Type( s ).toLowerCase() ); },
 		parts        : function( re ) {
@@ -66,7 +65,7 @@ util.x.cache( 'String', function( Type ) {
 				return '#' + ( ( m.length == 1 ) ? toHex( m[0] ).times( 3 ) : m.map( toHex ).join( '' ) );
 			}
 		}() ),
-		toJSON       : function() { return JSON.parse( this ); },
+		toJSON       : JSON.parse.bake(),
 		toRGB        : function( as_array ) {
 			var o = this.match( re_hex )[1], l = o.length, v;
 			switch( l ) {
