@@ -177,10 +177,6 @@ util.x.cache( 'Array', function( Type ) {
 			}, ctx || a );
 		},
 		include   : function( o ) { return PROTO.contains.call( this, o ) ? !1 : !this.push( o ) || true; },
-		invoke    : function( fn ) {
-			var args = Type.coerce( arguments, 1 );
-			return PROTO.map.call( this, function( o, i ) { return o[fn].apply( o, args ); } );
-		}, 
 		invokec   : function( fn ) {
 			var args = Type.coerce( arguments, 1 );
 			return PROTO.mapc.call( this, function( o, i ) {
@@ -196,11 +192,6 @@ util.x.cache( 'Array', function( Type ) {
 				return v;
 			}, [] );
 		}, 
-		pluck     : function( k, c ) {
-			return PROTO[c === true ? 'mapc' : 'map'].call( this, function( o ) {
-				return Object.value( o, k );
-			} );
-		},
 		remove    : function() {
 			var args = Type.coerce( arguments ), i, res = [], v;
 			while ( v = args.shift() )

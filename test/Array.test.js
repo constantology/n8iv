@@ -70,13 +70,6 @@ suite( 'Array', function() {
 		done();
 	} );
 
-	test( 'find', function( done ) {
-		expect( [1, 2, 3, 4, 5].find( function( v ) { return v == 3; } ) ).to.deep.equal( 3 );
-		expect( [1, 2, 3, 4, 5].find( function( v ) { return v == 6; } ) ).to.equal( null );
-
-		done();
-	} );
-
 	test( 'flatten', function( done ) {
 		var a = [1, 2, 3, [4, 5, 6, [7, 8, 9, [10, 11, 12]]]];
 
@@ -120,12 +113,6 @@ suite( 'Array', function() {
 		done();
 	} );
 
-	test( 'invoke', function( done ) {
-		expect( [1, 2, 3, 4, 5].invoke( 'pad', 3 ) ).to.deep.equal( ['001', '002', '003', '004', '005'] );
-
-		done();
-	} );
-
 	test( 'invokec', function( done ) {
 		expect( [
 			{ toString : function() { return null; } },
@@ -156,29 +143,6 @@ suite( 'Array', function() {
 
 	test( 'mapc', function( done ) {
 		expect( [1, undefined, 2, null, 3, NaN].mapc( m8 ) ).to.deep.equal( [1,2,3] );
-
-		done();
-	} );
-
-	test( 'pluck', function( done ) {
-		expect( [
-			{ 'one' : 1, 'two' : 2, 'three' : 3 },
-			{ 'one' : 1, 'two' : 2, 'three' : 3 },
-			{ 'one' : 1, 'two' : 2, 'three' : 3 }
-		].pluck( 'one' ) ).to.deep.equal( [1, 1, 1] );
-		expect( [
-			{ 'one' : 1,         'two' : 2, 'three' : 3 },
-			{ 'one' : undefined, 'two' : 2, 'three' : 3 },
-			{ 'one' : 1,         'two' : 2, 'three' : 3 },
-			{ 'one' : null,      'two' : 2, 'three' : 3 },
-			{ 'one' : 1,         'two' : 2, 'three' : 3 }
-		].pluck( 'one', true ) ).to.deep.equal( [1, 1, 1] );
-		expect( m8.range( 1, 10 ).map( function( o, i ) {
-			return { src : { val : i } };
-		} ).pluck( 'src.val' ) ).to.deep.equal( m8.range( 0, 9 ) );
-		expect( m8.range( 1, 10 ).map( function( o, i ) {
-			return { src : { val : i % 2 ? i : null } };
-		} ).pluck( 'src.val', true ) ).to.deep.equal( [1, 3, 5, 7, 9] );
 
 		done();
 	} );

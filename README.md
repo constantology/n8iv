@@ -39,8 +39,8 @@ Tested to work with nodejs, FF4+, Safari 5+, Chrome 7+, IE9+. Should technically
 
 ## File size
 
-- n8iv.js ≅ 4.6kb (gzipped)
-- n8iv.min.js ≅ 3.2kb (minzipped)
+- n8iv.js ≅ 4.5kb (gzipped)
+- n8iv.min.js ≅ 3.1kb (minzipped)
 
 ## License
 

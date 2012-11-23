@@ -219,21 +219,8 @@ If the passed `value` is contained in the Array instance, `include` will return 
 
 ```
 
-### invoke( method:String[, arg1:Mixed, arg2:Mixed, ..., argN:Mixed] ):Array
-Executes the passed `method` – **NOTE:** `method` is a String, and should be the name of `method` that exists on each item in the Array – on each item in the Array, passing any extra arguments to each method call.
-
-#### Example:
-
-```javascript
-
-   ['lorem', 'ipsum', 'dolor', 'sit', 'amet'].invoke( 'toUpperCase' ); // returns => ["LOREM", "IPSUM", "DOLOR", "SIT", "AMET"]
-
-   [1, 2, 3, 4, 5, 6, 7, 8].invoke( 'pad', 4, 2 );                     // returns => ["0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000"]
-
-```
-
 ### invokec( method_name:String[, arg1:Mixed, arg2:Mixed, ..., argN:Mixed] ):Array
-Works similar to `invoke` above, only any `null` and `undefined` values are omitted from the returned Array.
+Works similar to `invoke`, only any `NaN`, `null` and `undefined` values are omitted from the returned Array.
 
 Think of it as an optimised version of running: `[].invoke().compact()`.
 
@@ -295,29 +282,6 @@ Think of it as an optimised version of running: `[].map().compact()`.
 
 // mapc method
    data.mapc( iterator ); // returns => [2, 4, 6, 8]
-
-```
-
-### pluck( key:String[, compact:Boolean] ):Array
-Returns a new Array where all the items are the values of the passed property `key`.
-
-If `compact` is set to `true` then all `null` and `undefined` values will be omitted from the returned Array.
-
-**NOTE:** Unlike other `pluck` implementations, this implementation has a "smarter" way to get property values, allows you to `pluck` nested Object values, as well as HTML attributes.
-
-#### Example:
-
-```javascript
-
-   var data = [{ data : { value : 'foo' } }, { data : { value : 'bar' } }, {}, { value : 'blim' }, { data : { value : 'blam' } }];
-
-// slower, has to iterate twice
-   data.pluck( 'data' ).pluck( 'value' );  // returns => ["foo", "bar", undefined, undefined, "blam"]
-
-// optimised version of the above
-   data.pluck( 'data.value' );             // returns => ["foo", "bar", undefined, undefined, "blam"]
-
-   data.pluck( 'data.value', true );       // returns => ["foo", "bar", "blam"]
 
 ```
 
