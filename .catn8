@@ -4,7 +4,8 @@
 		"files" : ["Object", "Function", "Array", "Number", "String", "expose"]
 	},
 	"target"    : {
-		"dir"   : "{pwd}"
+		"dir"   : "{pwd}",
+		"min"   : true
 	},
 	"type"      : "application/javascript"
 }
